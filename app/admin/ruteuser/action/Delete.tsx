@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2";
 import { supabase, supabaseBUCKET } from '@/app/helper'
 
-function Delete({ ruteuserId, reload,ruteId }: { ruteuserId: Number, reload: Function,ruteId: String }) {
+function Delete({ reload, reloadId, ruteId, ruteuserId }: { reload: Function, reloadId: Function, ruteId: String, ruteuserId: Number }) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -21,12 +21,13 @@ function Delete({ ruteuserId, reload,ruteId }: { ruteuserId: Number, reload: Fun
         })
     }
 
-    const handleDelete = async (tpsId: number) => {
+    const handleDelete = async (ruteuserId: number) => {
         setIsLoading(true)
         handleClose()
         await axios.delete(`/admin/api/ruteuser/${ruteuserId}`)
         setTimeout(function () {
-            reload(ruteId)
+            reload()
+            reloadId(ruteId)
             setIsLoading(false)
             Swal.fire({
                 position: 'top-end',

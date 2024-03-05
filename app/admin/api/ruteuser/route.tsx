@@ -15,13 +15,11 @@ export const POST = async (request: Request) => {
 }
 
 export const GET = async () => {
-    const user = await prisma.ruteTb.findMany({
+    const user = await prisma.ruteUserTb.findMany({
         include:{
-            zonaTb:true
+            ruteTb:true,
+            userTb:true,
         },
-        orderBy: {
-            nama: 'asc'
-        }
     });
     return NextResponse.json(user, { status: 200 })
 }

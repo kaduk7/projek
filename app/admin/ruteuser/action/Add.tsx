@@ -1,14 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
-import { useState, SyntheticEvent, useRef, useEffect } from "react"
+import { useState, useRef, useEffect } from "react"
 import axios from "axios"
 import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation"
 import DataTable from 'react-data-table-component';
-import { supabase, supabaseBUCKET } from '@/app/helper'
 
-function Add({rutes, ruteId }: {rutes:Function, ruteId: String }) {
+function Add({ reload,reloadId, ruteId,dataAll }: { reload:Function,reloadId: Function, ruteId: String,dataAll:Array<any> }) {
     const [datauser, setDatauser] = useState([])
     const [userId, setUserId] = useState("")
     const ruteid = ruteId
@@ -56,41 +55,6 @@ function Add({rutes, ruteId }: {rutes:Function, ruteId: String }) {
     function clearForm() {
         setUserId('')
     }
-
-    const handleSubmit = async (row:any) => {
-        setIsLoading(true)
-        console.log('eeee',row.id)
-        try {
-            const formData = new FormData()
-            formData.append('userId', row.id)
-            formData.append('ruteid', String(ruteid))
-
-            const xxx = await axios.post(`/admin/api/ruteuser`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-            setTimeout(function () {
-                if (xxx.data.pesan == 'berhasil') {
-                    handleClose();
-                    setIsLoading(false)
-                    clearForm();
-                    rutes(ruteid)
-                    router.refresh()
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil Simpan',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            }, 1500);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-
     const handleRowsPerPageChange = (newPerPage: number, page: number) => {
         setItemsPerPage(newPerPage);
         setCurrentPage(page);
@@ -120,14 +84,50 @@ function Add({rutes, ruteId }: {rutes:Function, ruteId: String }) {
         {
             name: 'Action',
             cell: (row: any) => (
-                <div className="d-flex">
-                    <button type="button" className="btn btn-primary light" onClick={() => handleSubmit(row)}>Tambah</button>
-                </div>
+                !dataAll.some((entry:any) => entry.userId === Number(row.id) && entry.ruteId === Number(ruteid)) ? (
+                    <div className="d-flex">
+                        <button type="button" className="btn btn-primary light" onClick={() => handleSubmit(row)}>Tambah</button>
+                    </div>
+                ) : null
             ),
             width: '150px'
         },
 
     ];
+
+    const handleSubmit = async (row: any) => {
+        setIsLoading(true)
+        try {
+            const formData = new FormData()
+            formData.append('userId', row.id)
+            formData.append('ruteid', String(ruteid))
+
+            const xxx = await axios.post(`/admin/api/ruteuser`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            setTimeout(function () {
+                if (xxx.data.pesan == 'berhasil') {
+                    setIsLoading(false)
+                    clearForm();
+                    reload()
+                    reloadId(ruteid)
+                    router.refresh()
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Berhasil Simpan',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            }, 1000);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
 
     return (
         <div>

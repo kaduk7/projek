@@ -6,6 +6,7 @@ import Delete from './action/Delete';
 
 
 const Ruteuser = () => {
+  const [dataruteuserall, setDataRuteUserall] = useState([])
   const [dataruteuser, setDataRuteUser] = useState([])
   const [datazona, setDatazona] = useState([])
   const [datarute, setDatarute] = useState([])
@@ -16,15 +17,20 @@ const Ruteuser = () => {
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
+    reload()
     daftarzona()
   }, [])
 
-  const reload = async (ruteid:String) => {
-    const response = await fetch(`/admin/api/ruteuser/${ruteid}`)
-    const result = await response.json();
-    setDataRuteUser(result);
+  const reload = async () => {
+    try {
+      const response = await fetch(`/admin/api/ruteuser`);
+      const result = await response.json();
+      setDataRuteUserall(result);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
-
+  
   const daftarzona = async () => {
     try {
       const response = await fetch(`/admin/api/zona`);
@@ -33,6 +39,12 @@ const Ruteuser = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
+  }
+  
+  const reloadId = async (ruteid:String) => {
+    const response = await fetch(`/admin/api/ruteuser/${ruteid}`)
+    const result = await response.json();
+    setDataRuteUser(result);
   }
 
   const onZona = async (e: any) => {
@@ -82,7 +94,7 @@ const Ruteuser = () => {
       name: 'Action',
       cell: (row: any) => (
         <div className="d-flex">
-          <Delete reload={reload} ruteuserId={row.id} ruteId={ruteid} />
+          <Delete reload={reload} reloadId={reloadId} ruteId={ruteid} ruteuserId={row.id}  />
         </div>
       ),
       width: '150px'
@@ -100,7 +112,7 @@ const Ruteuser = () => {
               <div className="card-title col-md-3">
                 <div className="row">
                   <div className="mb-3 col-md-12">
-                    <label className="form-label" >Zona</label>
+                    <h6 className="form-label" >Zona</h6>
                     <select
                       required
                       autoFocus
@@ -117,7 +129,7 @@ const Ruteuser = () => {
               <div className="card-title col-md-3">
                 <div className="row">
                   <div className="mb-3 col-md-12">
-                    <label className="form-label" >Rute</label>
+                    <h6 className="form-label" >Rute</h6>
                     {zonaid === '' ?
                       <select
                         className="form-control">
@@ -145,7 +157,7 @@ const Ruteuser = () => {
                 <>
                   <div className="row mb-3">
                     <div className="col-md-9">
-                      <Add rutes={reload} ruteId={ruteid} />
+                      <Add reload={reload} reloadId={reloadId} ruteId={ruteid} dataAll={dataruteuserall} />
                     </div>
                   </div>
                   <DataTable
