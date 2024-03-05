@@ -66,8 +66,6 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
         e.preventDefault()
         const newpass = password == "" ? 'no' : 'yes'
         const newfoto = foto === user.foto ? 'no' : 'yes'
-        console.log('newfoto',newfoto)
-        console.log('newpass',newpass)
         try {
             const formData = new FormData()
             formData.append('nama', nama)

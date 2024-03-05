@@ -5,11 +5,16 @@ import axios from "axios"
 import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation"
+import DataTable from 'react-data-table-component';
 import { supabase, supabaseBUCKET } from '@/app/helper'
 
-function Add({ ruteId, user }: { ruteId: String, user: Array<any> }) {
+function Add({rutes, ruteId }: {rutes:Function, ruteId: String }) {
+    const [datauser, setDatauser] = useState([])
     const [userId, setUserId] = useState("")
-    const [ruteid, setRuteId] = useState(ruteId)
+    const ruteid = ruteId
+    const [filterText, setFilterText] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const [show, setShow] = useState(false);
     const router = useRouter()
     const ref = useRef<HTMLInputElement>(null);
@@ -35,18 +40,29 @@ function Add({ ruteId, user }: { ruteId: String, user: Array<any> }) {
 
     useEffect(() => {
         ref.current?.focus();
+        daftaruser()
     }, [])
+
+    const daftaruser = async () => {
+        try {
+            const response = await fetch(`/admin/api/user`);
+            const result = await response.json();
+            setDatauser(result);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
 
     function clearForm() {
         setUserId('')
     }
 
-    const handleSubmit = async (e: SyntheticEvent) => {
+    const handleSubmit = async (row:any) => {
         setIsLoading(true)
-        e.preventDefault()
+        console.log('eeee',row.id)
         try {
             const formData = new FormData()
-            formData.append('userId', userId)
+            formData.append('userId', row.id)
             formData.append('ruteid', String(ruteid))
 
             const xxx = await axios.post(`/admin/api/ruteuser`, formData, {
@@ -59,6 +75,7 @@ function Add({ ruteId, user }: { ruteId: String, user: Array<any> }) {
                     handleClose();
                     setIsLoading(false)
                     clearForm();
+                    rutes(ruteid)
                     router.refresh()
                     Swal.fire({
                         position: 'top-end',
@@ -74,40 +91,100 @@ function Add({ ruteId, user }: { ruteId: String, user: Array<any> }) {
         }
     }
 
+    const handleRowsPerPageChange = (newPerPage: number, page: number) => {
+        setItemsPerPage(newPerPage);
+        setCurrentPage(page);
+    };
+
+    const filteredItems = datauser.filter(
+        (item: any) => item.nama && item.nama.toLowerCase().includes(filterText.toLowerCase()),
+    );
+
+    const columns = [
+        {
+            name: 'No',
+            cell: (row: any, index: number) => <div>{(currentPage - 1) * itemsPerPage + index + 1}</div>,
+            sortable: false,
+            width: '80px'
+        },
+        {
+            name: 'Nama',
+            selector: (row: any) => row.nama,
+            sortable: true,
+        },
+        {
+            name: 'No Hp',
+            selector: (row: any) => row.hp,
+            sortable: true,
+        },
+        {
+            name: 'Action',
+            cell: (row: any) => (
+                <div className="d-flex">
+                    <button type="button" className="btn btn-primary light" onClick={() => handleSubmit(row)}>Tambah</button>
+                </div>
+            ),
+            width: '150px'
+        },
+
+    ];
+
     return (
         <div>
             <button onClick={handleShow} type="button" className="btn btn-success btn-icon-text">
-                Tambah Tps</button>
+                Tambah User</button>
             <Modal
-                dialogClassName="modal-m"
+                dialogClassName="modal-lg"
                 show={show}
                 onHide={handleClose}
                 backdrop="static"
                 keyboard={false}>
-                <form onSubmit={handleSubmit}>
+                <form>
                     <Modal.Header closeButton>
-                        <Modal.Title>Tambah Data Tps</Modal.Title>
+                        <Modal.Title>Tambah Data User</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <div className="row">
-                            <div className="mb-3 col-md-12">
-                                <label className="form-label" >Nama</label>
-                                <select
-                                    required
-                                    autoFocus
-                                    className="form-control"
-                                    value={userId} onChange={(e) => setUserId(e.target.value)}>
-                                    <option value={''}> Pilih User</option>
-                                    {user?.map((item: any, i) => (
-                                        <option key={i} value={item.id} >{item.nama}</option>
-                                    ))}
-                                </select>
+                        <div className="row mb-3">
+                            <div className="col-md-9">
+
+                            </div>
+                            <div className="col-md-3">
+                                <div className="input-group mb-3  input-success">
+                                    <span className="input-group-text border-0"><i className="mdi mdi-magnify"></i></span>
+                                    <input
+                                        id="search"
+                                        type="text"
+                                        placeholder="Search..."
+                                        aria-label="Search Input"
+                                        value={filterText}
+                                        onChange={(e: any) => setFilterText(e.target.value)}
+                                        className="form-control"
+                                    />
+                                </div>
                             </div>
                         </div>
+                        <DataTable
+                            columns={columns}
+                            data={filteredItems}
+                            pagination
+                            persistTableHead
+                            responsive
+                            paginationPerPage={itemsPerPage}
+                            paginationTotalRows={filteredItems.length}
+                            onChangePage={(page) => setCurrentPage(page)}
+                            onChangeRowsPerPage={handleRowsPerPageChange}
+                            paginationRowsPerPageOptions={[5, 10, 20]}
+                            customStyles={{
+                                headRow: {
+                                    style: {
+                                        backgroundColor: '#53d0b2',
+                                    },
+                                },
+                            }}
+                        />
                     </Modal.Body>
                     <Modal.Footer>
                         <button type="button" className="btn btn-danger light" onClick={handleClose}>Close</button>
-                        <button type="submit" className="btn btn-primary light">Simpan</button>
                     </Modal.Footer>
                 </form>
             </Modal>

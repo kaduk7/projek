@@ -2,13 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import Add from './action/Add';
-import Update from './action/Update';
 import Delete from './action/Delete';
 
 
 const Ruteuser = () => {
   const [dataruteuser, setDataRuteUser] = useState([])
-  const [datauser, setDatauser] = useState([])
   const [datazona, setDatazona] = useState([])
   const [datarute, setDatarute] = useState([])
   const [zonaid, setZonaid] = useState('')
@@ -19,18 +17,12 @@ const Ruteuser = () => {
 
   useEffect(() => {
     daftarzona()
-    daftaruser()
   }, [])
 
-
-  const daftaruser = async () => {
-    try {
-      const response = await fetch(`/admin/api/user`);
-      const result = await response.json();
-      setDatauser(result);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
+  const reload = async (ruteid:String) => {
+    const response = await fetch(`/admin/api/ruteuser/${ruteid}`)
+    const result = await response.json();
+    setDataRuteUser(result);
   }
 
   const daftarzona = async () => {
@@ -53,12 +45,13 @@ const Ruteuser = () => {
     setDatarute(result)
   }
 
-  const onRuteUser = async (e: any) => {
+  const onRute = async (e: any) => {
     setRuteid(e.target.value)
     const response = await fetch(`/admin/api/ruteuser/${e.target.value}`)
     const result = await response.json();
     setDataRuteUser(result);
   }
+
   const handleRowsPerPageChange = (newPerPage: number, page: number) => {
     setItemsPerPage(newPerPage);
     setCurrentPage(page);
@@ -81,11 +74,15 @@ const Ruteuser = () => {
       sortable: true,
     },
     {
+      name: 'No Hp',
+      selector: (row: any) => row.userTb.hp,
+      sortable: true,
+    },
+    {
       name: 'Action',
       cell: (row: any) => (
         <div className="d-flex">
-          {/* <Update reload={reload} tps={row} rute={datarute} />
-          <Delete reload={reload} tpsfoto={row.foto} tpsId={row.id} /> */}
+          <Delete reload={reload} ruteuserId={row.id} />
         </div>
       ),
       width: '150px'
@@ -129,7 +126,7 @@ const Ruteuser = () => {
                       :
                       <select
                         className="form-control"
-                        value={ruteid} onChange={onRuteUser}>
+                        value={ruteid} onChange={onRute}>
                         <option value={''}> Pilih Rute</option>
                         {datarute?.map((item: any, i) => (
                           <option key={i} value={item.id} >{item.nama}</option>
@@ -148,7 +145,7 @@ const Ruteuser = () => {
                 <>
                   <div className="row mb-3">
                     <div className="col-md-9">
-                      <Add  user={datauser} ruteId={ruteid} />
+                      <Add rutes={reload} ruteId={ruteid} />
                     </div>
                   </div>
                   <DataTable

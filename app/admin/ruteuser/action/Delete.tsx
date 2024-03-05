@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2";
 import { supabase, supabaseBUCKET } from '@/app/helper'
 
-function Delete({ tpsId, tpsfoto, reload }: { tpsId: Number, tpsfoto: String, reload: Function }) {
+function Delete({ ruteuserId, reload }: { ruteuserId: Number, reload: Function }) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -24,10 +24,7 @@ function Delete({ tpsId, tpsfoto, reload }: { tpsId: Number, tpsfoto: String, re
     const handleDelete = async (tpsId: number) => {
         setIsLoading(true)
         handleClose()
-        await axios.delete(`/admin/api/tps/${tpsId}`)
-        await supabase.storage
-            .from(supabaseBUCKET)
-            .remove([`foto-tps/${tpsfoto}`]);
+        await axios.delete(`/admin/api/tps/${ruteuserId}`)
         setTimeout(function () {
             reload()
             setIsLoading(false)
@@ -55,7 +52,7 @@ function Delete({ tpsId, tpsfoto, reload }: { tpsId: Number, tpsfoto: String, re
                 </Modal.Body>
                 <Modal.Footer>
                     <button type="button" className="btn btn-warning light" onClick={handleClose}>Close</button>
-                    <button type="button" className="btn btn-danger light" onClick={() => handleDelete(Number(tpsId))}>Ya, Hapus</button>
+                    <button type="button" className="btn btn-danger light" onClick={() => handleDelete(Number(ruteuserId))}>Ya, Hapus</button>
                 </Modal.Footer>
             </Modal>
         </div>
