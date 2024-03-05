@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ZonaTb {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ruteTb RuteTb[]
+}
+
+model RuteTb {
+  id        Int      @id @default(autoincrement())
+  zonaId    Int
+  nama      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  zonaTb ZonaTb  @relation(fields: [zonaId], references: [id], onDelete: Cascade)
+  tpsTb  TpsTb[]
+  ruteUserTb RuteUserTb[]
+}
+
+model TpsTb {
+  id             Int      @id @default(autoincrement())
+  ruteId         Int
+  nama           String
+  alamat         String
+  jamOperasional String
+  koordinat      String
+  foto           String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  ruteTb RuteTb @relation(fields: [ruteId], references: [id], onDelete: Cascade)
+}
+
+model UserTb {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  jenis     String
+  hp        String   @unique
+  wa        String   @unique
+  password  String
+  foto      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ruteUserTb RuteUserTb[]
+}
+
+model RuteUserTb {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  ruteId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userTb UserTb @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ruteTb RuteTb @relation(fields: [ruteId], references: [id], onDelete: Cascade)
+}
