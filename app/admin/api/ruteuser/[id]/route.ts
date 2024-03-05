@@ -19,7 +19,7 @@ export const PATCH = async (request: Request, { params }: { params: { id: string
 
 export const DELETE = async (request: Request, { params }: { params: { id: string } }) => {
 
-    await prisma.ruteTb.delete({
+    await prisma.ruteUserTb.delete({
         where: {
             id: Number(params.id)
         }

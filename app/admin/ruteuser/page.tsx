@@ -82,7 +82,7 @@ const Ruteuser = () => {
       name: 'Action',
       cell: (row: any) => (
         <div className="d-flex">
-          <Delete reload={reload} ruteuserId={row.id} />
+          <Delete reload={reload} ruteuserId={row.id} ruteId={ruteid} />
         </div>
       ),
       width: '150px'
