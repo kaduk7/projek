@@ -84,7 +84,7 @@ function Add({ reload,reloadId, ruteId,dataAll }: { reload:Function,reloadId: Fu
         {
             name: 'Action',
             cell: (row: any) => (
-                !dataAll.some((entry:any) => entry.userId === Number(row.id) && entry.ruteId === Number(ruteid)) ? (
+                !dataAll.some((data:any) => data.userId === Number(row.id) && data.ruteId === Number(ruteid)) ? (
                     <div className="d-flex">
                         <button type="button" className="btn btn-primary light" onClick={() => handleSubmit(row)}>Tambah</button>
                     </div>
@@ -92,7 +92,6 @@ function Add({ reload,reloadId, ruteId,dataAll }: { reload:Function,reloadId: Fu
             ),
             width: '150px'
         },
-
     ];
 
     const handleSubmit = async (row: any) => {

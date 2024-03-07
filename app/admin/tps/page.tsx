@@ -9,7 +9,7 @@ import Delete from './action/Delete';
 const Tps = () => {
   const [datatps, setDatatps] = useState([])
   const [datarute, setDatarute] = useState([])
-  const [filterText, setFilterText] = React.useState('');
+  const [filterText, setFilterText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 

@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import Add from './action/Add';
 import Update from './action/Update';
@@ -9,7 +9,7 @@ import Delete from './action/Delete';
 const Rute = () => {
   const [datarute, setDatarute] = useState([])
   const [datazona, setDatazona] = useState([])
-  const [filterText, setFilterText] = React.useState('');
+  const [filterText, setFilterText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 

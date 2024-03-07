@@ -12,7 +12,7 @@ const Ruteuser = () => {
   const [datarute, setDatarute] = useState([])
   const [zonaid, setZonaid] = useState('')
   const [ruteid, setRuteid] = useState('')
-  const [filterText, setFilterText] = React.useState('');
+  const [filterText, setFilterText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
