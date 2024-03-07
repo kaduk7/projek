@@ -181,7 +181,7 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
                                 <label className="form-label" >No Hp</label>
                                 <input
                                     required
-                                    type="text"
+                                    type="number"
                                     className="form-control"
                                     value={hp} onChange={(e) => setHp(e.target.value)}
                                 />
@@ -190,7 +190,7 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
                                 <label className="form-label" >No WA</label>
                                 <input
                                     required
-                                    type="text"
+                                    type="number"
                                     className="form-control"
                                     value={wa} onChange={(e) => setWa(e.target.value)}
                                 />
