@@ -5,7 +5,6 @@ import Add from './action/Add';
 import Update from './action/Update';
 import Delete from './action/Delete';
 
-
 const User = () => {
   const [datauser, setDatauser] = useState([])
   const [filterText, setFilterText] = useState('');
@@ -62,7 +61,6 @@ const User = () => {
       ),
       width: '150px'
     },
-
   ];
 
   return (

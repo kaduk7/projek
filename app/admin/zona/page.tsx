@@ -5,7 +5,6 @@ import Add from './action/Add';
 import Update from './action/Update';
 import Delete from './action/Delete';
 
-
 const Zona = () => {
   const [datazona, setDatazona] = useState([])
   const [filterText, setFilterText] = useState('');
@@ -57,7 +56,6 @@ const Zona = () => {
       ),
       width: '150px'
     },
-
   ];
 
   return (

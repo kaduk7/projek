@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client"
 import { useState, SyntheticEvent, useEffect } from "react"
 import axios from "axios"
@@ -9,7 +8,6 @@ import { useRouter } from "next/navigation"
 import { supabase, supabaseBUCKET } from '@/app/helper'
 
 function Update({ user, reload }: { user: UserTb, reload: Function }) {
-
     const [nama, setNama] = useState(user.nama)
     const [jenis, setJenis] = useState(user.jenis)
     const [hp, setHp] = useState(user.hp)

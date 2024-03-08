@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client"
 import { useState, SyntheticEvent } from "react"
 import axios from "axios"
@@ -8,7 +7,6 @@ import {  ZonaTb } from "@prisma/client";
 import { useRouter } from "next/navigation"
 
 function Update({ zona, reload }: { zona: ZonaTb, reload: Function }) {
-
     const [nama, setNama] = useState(zona.nama)
     const [show, setShow] = useState(false);
     const router = useRouter()

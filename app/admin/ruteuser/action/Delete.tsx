@@ -3,7 +3,6 @@ import { useState } from "react"
 import axios from "axios"
 import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2";
-import { supabase, supabaseBUCKET } from '@/app/helper'
 
 function Delete({ reload, reloadId, ruteId, ruteuserId }: { reload: Function, reloadId: Function, ruteId: String, ruteuserId: Number }) {
     const [show, setShow] = useState(false);

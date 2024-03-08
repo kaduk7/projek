@@ -1,6 +1,6 @@
 
 export const metadata = {
-    title: "Data Tps",
+    title: "Data Rute User",
 }
 
 function LayoutKategori({ children }: { children: React.ReactNode }) {

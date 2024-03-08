@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client"
 import { useState, SyntheticEvent } from "react"
 import axios from "axios"
@@ -8,7 +7,6 @@ import { RuteTb } from "@prisma/client";
 import { useRouter } from "next/navigation"
 
 function Update({ rute, reload,zona }: { rute: RuteTb, reload: Function, zona: Array<any> }) {
-
     const [nama, setNama] = useState(rute.nama)
     const [zonaId, setZonaId] = useState(String(rute.zonaId))
     const [show, setShow] = useState(false);

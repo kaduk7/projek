@@ -5,7 +5,6 @@ import Add from './action/Add';
 import Update from './action/Update';
 import Delete from './action/Delete';
 
-
 const Tps = () => {
   const [datatps, setDatatps] = useState([])
   const [datarute, setDatarute] = useState([])

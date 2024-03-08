@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client"
 import { useState, useRef, useEffect } from "react"
 import axios from "axios"
@@ -9,7 +8,6 @@ import DataTable from 'react-data-table-component';
 
 function Add({ reload,reloadId, ruteId,dataAll }: { reload:Function,reloadId: Function, ruteId: String,dataAll:Array<any> }) {
     const [datauser, setDatauser] = useState([])
-    const [userId, setUserId] = useState("")
     const ruteid = ruteId
     const [filterText, setFilterText] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -53,7 +51,7 @@ function Add({ reload,reloadId, ruteId,dataAll }: { reload:Function,reloadId: Fu
     }
 
     function clearForm() {
-        setUserId('')
+        
     }
     const handleRowsPerPageChange = (newPerPage: number, page: number) => {
         setItemsPerPage(newPerPage);
@@ -126,7 +124,6 @@ function Add({ reload,reloadId, ruteId,dataAll }: { reload:Function,reloadId: Fu
             console.error('Error:', error);
         }
     }
-
 
     return (
         <div>

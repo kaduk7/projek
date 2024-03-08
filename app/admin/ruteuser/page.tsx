@@ -4,7 +4,6 @@ import DataTable from 'react-data-table-component';
 import Add from './action/Add';
 import Delete from './action/Delete';
 
-
 const Ruteuser = () => {
   const [dataruteuserall, setDataRuteUserall] = useState([])
   const [dataruteuser, setDataRuteUser] = useState([])

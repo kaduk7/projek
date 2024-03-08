@@ -1,6 +1,6 @@
 
 export const metadata = {
-    title: "Hizratech Official",
+    title: "Next Official",
 }
 
 function LayoutLogin({ children }: { children: React.ReactNode }) {

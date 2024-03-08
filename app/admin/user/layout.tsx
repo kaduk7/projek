@@ -1,6 +1,6 @@
 
 export const metadata = {
-    title: "Superadmin",
+    title: "Data User",
 }
 
 function LayoutKategori({ children }: { children: React.ReactNode }) {

@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client"
 import { useState, SyntheticEvent, useRef, useEffect } from "react"
 import axios from "axios"
@@ -94,9 +93,9 @@ function Add({ reload }: { reload: Function }) {
                 }
                 if (xxx.data.pesan == 'berhasil') {
                     await supabase.storage
-                    .from(supabaseBUCKET)
-                    .upload(`foto-user/${namaunik}`, image);
-                    
+                        .from(supabaseBUCKET)
+                        .upload(`foto-user/${namaunik}`, image);
+
                     handleClose();
                     setIsLoading(false)
                     Swal.fire({

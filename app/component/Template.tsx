@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-sync-scripts */
 "use client"
 import 'bootstrap-select/dist/css/bootstrap-select.min.css'
 import '../../public/tema/css/style.css'

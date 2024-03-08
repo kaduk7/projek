@@ -29,7 +29,6 @@ export default function Header() {
                                 </a>!</h3>
                             </div>
                             <ul className="navbar-nav header-right">
-
                             </ul>
                         </div>
                     </nav>

@@ -4,7 +4,6 @@ import React from 'react'
 import Swal from 'sweetalert2';
 
 const Buttonlogout = () => {
-
     function tombol() {
         Swal.fire({
             title: "Anda Yakin..?",
@@ -20,8 +19,6 @@ const Buttonlogout = () => {
             }
         });
     }
-
-
     return (
         <a type='button' onClick={tombol}>
             <span>Logout</span>

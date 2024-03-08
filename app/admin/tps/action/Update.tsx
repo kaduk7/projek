@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client"
 import { useState, SyntheticEvent, useEffect } from "react"
 import axios from "axios"
@@ -9,7 +8,6 @@ import { useRouter } from "next/navigation"
 import { supabase, supabaseBUCKET } from '@/app/helper'
 
 function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Array<any> }) {
-
     const [nama, setNama] = useState(tps.nama)
     const [ruteId, setRuteId] = useState(String(tps.ruteId))
     const [alamat, setAlamat] = useState(tps.alamat)
