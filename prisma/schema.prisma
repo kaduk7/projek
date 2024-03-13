@@ -26,8 +26,8 @@ model RuteTb {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  zonaTb ZonaTb  @relation(fields: [zonaId], references: [id], onDelete: Cascade)
-  tpsTb  TpsTb[]
+  zonaTb     ZonaTb       @relation(fields: [zonaId], references: [id], onDelete: Cascade)
+  tpsTb      TpsTb[]
   ruteUserTb RuteUserTb[]
 }
 
@@ -68,4 +68,12 @@ model RuteUserTb {
 
   userTb UserTb @relation(fields: [userId], references: [id], onDelete: Cascade)
   ruteTb RuteTb @relation(fields: [ruteId], references: [id], onDelete: Cascade)
+}
+
+model SlideTb {
+  id        Int      @id @default(autoincrement())
+  judul     String
+  gambar    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
