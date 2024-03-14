@@ -55,7 +55,7 @@ const Slide = () => {
                         <div className="col-md-2">
                           <h4>
                             <a>
-                              <Delete reload={reload} slideId={x.id} />
+                              <Delete reload={reload} slideId={x.id} slideFoto={x.gambar} />
                             </a>
                           </h4>
 

@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2";
 import { supabase, supabaseBUCKET } from '@/app/helper'
 
-function Delete({ slideId, reload,slideFoto }: { slideId: Number, reload: Function,slideFoto:String }) {
+function Delete({ eventId, eventfoto, reload }: { eventId: Number, eventfoto: String, reload: Function }) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -21,13 +21,13 @@ function Delete({ slideId, reload,slideFoto }: { slideId: Number, reload: Functi
         })
     }
 
-    const handleDelete = async (slideId: number) => {
+    const handleDelete = async (eventId: number) => {
         setIsLoading(true)
         handleClose()
-        await axios.delete(`/admin/api/slide/${slideId}`)
+        await axios.delete(`/admin/api/event/${eventId}`)
         await supabase.storage
             .from(supabaseBUCKET)
-            .remove([`foto-slide/${slideFoto}`]);
+            .remove([`foto-event/${eventfoto}`]);
         setTimeout(function () {
             reload()
             setIsLoading(false)
@@ -55,7 +55,7 @@ function Delete({ slideId, reload,slideFoto }: { slideId: Number, reload: Functi
                 </Modal.Body>
                 <Modal.Footer>
                     <button type="button" className="btn btn-warning light" onClick={handleClose}>Close</button>
-                    <button type="button" className="btn btn-danger light" onClick={() => handleDelete(Number(slideId))}>Ya, Hapus</button>
+                    <button type="button" className="btn btn-danger light" onClick={() => handleDelete(Number(eventId))}>Ya, Hapus</button>
                 </Modal.Footer>
             </Modal>
         </div>

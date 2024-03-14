@@ -76,6 +76,9 @@ export default function MenuAdmin() {
                             <li>
                                 <Link href="/admin/ruteuser">Rute User</Link>
                             </li>
+                            <li>
+                                <Link href="/admin/event">Event</Link>
+                            </li>
                         </ul>
                     </li>
 

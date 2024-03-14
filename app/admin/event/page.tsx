@@ -4,34 +4,23 @@ import DataTable from 'react-data-table-component';
 import Add from './action/Add';
 import Update from './action/Update';
 import Delete from './action/Delete';
+import moment from 'moment';
 
-const Tps = () => {
-  const [datatps, setDatatps] = useState([])
-  const [datarute, setDatarute] = useState([])
+const Event = () => {
+  const [dataevent, setDataevent] = useState([])
   const [filterText, setFilterText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
     reload()
-    daftarrute()
   }, [])
 
   const reload = async () => {
     try {
-      const response = await fetch(`/admin/api/tps`);
+      const response = await fetch(`/admin/api/event`);
       const result = await response.json();
-      setDatatps(result);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }
-
-  const daftarrute = async () => {
-    try {
-      const response = await fetch(`/admin/api/rute`);
-      const result = await response.json();
-      setDatarute(result);
+      setDataevent(result);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -42,7 +31,7 @@ const Tps = () => {
     setCurrentPage(page);
   };
 
-  const filteredItems = datatps.filter(
+  const filteredItems = dataevent.filter(
     (item: any) => item.nama && item.nama.toLowerCase().includes(filterText.toLowerCase()),
   );
 
@@ -54,20 +43,25 @@ const Tps = () => {
       width: '80px'
     },
     {
-      name: 'Nama Tps',
+      name: 'Nama',
       selector: (row: any) => row.nama,
       sortable: true,
     },
     {
-      name: 'Jam Operasional',
-      selector: (row: any) => row.jamOperasional,
+      name: 'Tanggal Mulai',
+      selector: (row: any) => moment(row.tanggalMulai).format("DD-MM-YYYY") ,
+      sortable: true,
+    },
+    {
+      name: 'Alamat',
+      selector: (row: any) => row.alamatLokasi,
     },
     {
       name: 'Action',
       cell: (row: any) => (
         <div className="d-flex">
-          <Update reload={reload} tps={row} rute={datarute} />
-          <Delete reload={reload} tpsfoto={row.foto} tpsId={row.id} />
+          {/* <Update reload={reload} tps={row} /> */}
+          <Delete reload={reload} eventfoto={row.foto} eventId={row.id} />
         </div>
       ),
       width: '150px'
@@ -81,12 +75,12 @@ const Tps = () => {
         <div className="col-md-12 grid-margin stretch-card">
           <div className="card">
             <div className="card-header">
-              <h1 className="card-title">Data Tps</h1>
+              <h1 className="card-title">Data Event</h1>
             </div>
             <div className="card-body">
               <div className="row mb-3">
                 <div className="col-md-9">
-                  <Add reload={reload} rute={datarute} />
+                  <Add reload={reload} />
                 </div>
                 <div className="col-md-3">
                   <div className="input-group mb-3  input-success">
@@ -130,4 +124,4 @@ const Tps = () => {
   )
 }
 
-export default Tps
+export default Event

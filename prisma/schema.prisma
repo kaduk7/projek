@@ -77,3 +77,16 @@ model SlideTb {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model EventTb {
+  id             Int      @id @default(autoincrement())
+  tanggalMulai   DateTime
+  tanggalSelesai DateTime
+  nama           String
+  keterangan     String
+  foto           String
+  koordinat      String
+  alamatLokasi   String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
