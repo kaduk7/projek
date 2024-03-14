@@ -11,7 +11,6 @@ const disableAuth: string[] = [
   "/favicon.ico",
 ];
 
-
 const loginPath: string = "/login";
 
 export async function middleware(request: NextRequest) {
@@ -23,10 +22,8 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  
-
   if (token && pathname.match(loginPath)) {
-    const url = new URL('/', request.url);
+    const url = new URL("/", request.url);
     return NextResponse.redirect(url);
   }
 
@@ -37,14 +34,13 @@ export async function middleware(request: NextRequest) {
   if (requireAuth.some((path) => pathname.startsWith(path))) {
     if (!token) {
       const url = new URL("/login", request.url);
-      url.searchParams.set("callbackUrl", encodeURI(request.url));
       return NextResponse.redirect(url);
     }
   }
-  
+
   if (pathname.startsWith("/admin")) {
     if (token?.jenis !== "Admin") {
-      const url = new URL('/', request.url);
+      const url = new URL("/", request.url);
       return NextResponse.redirect(url);
     }
   }
