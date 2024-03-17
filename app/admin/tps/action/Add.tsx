@@ -6,9 +6,10 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation"
 import { supabase, supabaseBUCKET } from '@/app/helper'
 
-function Add({ reload, rute }: { reload: Function, rute: Array<any> }) {
+function Add({ reload, rute,pengawas }: { reload: Function, rute: Array<any>,pengawas:Array<any> }) {
     const [nama, setNama] = useState("")
     const [ruteId, setRuteId] = useState("")
+    const [userId, setUserId] = useState("")
     const [alamat, setAlamat] = useState("")
     const [jammulai, setJammulai] = useState("")
     const [jamselesai, setJamselesai] = useState("")
@@ -45,6 +46,7 @@ function Add({ reload, rute }: { reload: Function, rute: Array<any> }) {
     function clearForm() {
         setNama('')
         setRuteId('')
+        setUserId('')
         setFile(null)
         setAlamat('')
         setJammulai('')
@@ -62,6 +64,7 @@ function Add({ reload, rute }: { reload: Function, rute: Array<any> }) {
             const formData = new FormData()
             formData.append('nama', nama)
             formData.append('ruteId', ruteId)
+            formData.append('userId', userId)
             formData.append('alamat', alamat)
             formData.append('jamOperasional', jamOperasional)
             formData.append('koordinat', koordinat)
@@ -115,6 +118,21 @@ function Add({ reload, rute }: { reload: Function, rute: Array<any> }) {
                         <Modal.Title>Tambah Data Tps</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                        <div className="mb-3 row">
+                            <label className="col-sm-3 col-form-label" >Pengawas</label>
+                            <div className="col-sm-9">
+                                <select
+                                    required
+                                    autoFocus
+                                    className="form-control"
+                                    value={userId} onChange={(e) => setUserId(e.target.value)}>
+                                    <option value={''}> Pilih Pengawas</option>
+                                    {pengawas?.map((item: any, i) => (
+                                        <option key={i} value={item.id} >{item.nama}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
                         <div className="mb-3 row">
                             <label className="col-sm-3 col-form-label" >Pilih Rute</label>
                             <div className="col-sm-9">

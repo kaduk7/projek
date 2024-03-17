@@ -8,12 +8,14 @@ import Delete from './action/Delete';
 const Tps = () => {
   const [datatps, setDatatps] = useState([])
   const [datarute, setDatarute] = useState([])
+  const [datapengawas, setDatapengawas] = useState([])
   const [filterText, setFilterText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
     reload()
+    pengawas()
     daftarrute()
   }, [])
 
@@ -22,6 +24,16 @@ const Tps = () => {
       const response = await fetch(`/admin/api/tps`);
       const result = await response.json();
       setDatatps(result);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+
+  const pengawas = async () => {
+    try {
+      const response = await fetch(`/admin/api/user`);
+      const result = await response.json();
+      setDatapengawas(result[2]);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -66,7 +78,7 @@ const Tps = () => {
       name: 'Action',
       cell: (row: any) => (
         <div className="d-flex">
-          <Update reload={reload} tps={row} rute={datarute} />
+          <Update reload={reload} tps={row} rute={datarute} pengawas={datapengawas} />
           <Delete reload={reload} tpsfoto={row.foto} tpsId={row.id} />
         </div>
       ),
@@ -86,7 +98,7 @@ const Tps = () => {
             <div className="card-body">
               <div className="row mb-3">
                 <div className="col-md-9">
-                  <Add reload={reload} rute={datarute} />
+                  <Add reload={reload} rute={datarute} pengawas={datapengawas} />
                 </div>
                 <div className="col-md-3">
                   <div className="input-group mb-3  input-success">

@@ -11,6 +11,7 @@ export const PATCH = async (request: Request, { params }: { params: { id: string
             id: Number(params.id)
         },
         data: {
+            userId: Number(formData.get('userId')),
             tanggalMulai: String(formData.get('tanggalMulai')),
             tanggalSelesai: String(formData.get('tanggalSelesai')),
             nama: String(formData.get('nama')),

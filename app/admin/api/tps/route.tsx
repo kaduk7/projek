@@ -10,6 +10,7 @@ export const POST = async (request: Request) => {
             nama: String(formData.get('nama')),
             alamat: String(formData.get('alamat')),
             ruteId: Number(formData.get('ruteId')),
+            userId: Number(formData.get('userId')),
             jamOperasional: String(formData.get('jamOperasional')),
             koordinat: String(formData.get('koordinat')),
             foto: String(formData.get('namaunik')),
@@ -21,7 +22,8 @@ export const POST = async (request: Request) => {
 export const GET = async () => {
     const user = await prisma.tpsTb.findMany({
         include:{
-            ruteTb:true
+            ruteTb:true,
+            userTb:true,
         },
         orderBy: {
             nama: 'asc'

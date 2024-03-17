@@ -22,6 +22,9 @@ export const POST = async (request: Request) => {
 
 export const GET = async () => {
     const user = await prisma.eventTb.findMany({
+        include: {
+            userTb: true
+        },
         orderBy: {
             nama: 'asc'
         }

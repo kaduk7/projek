@@ -34,6 +34,7 @@ model RuteTb {
 model TpsTb {
   id             Int      @id @default(autoincrement())
   ruteId         Int
+  userId         Int
   nama           String
   alamat         String
   jamOperasional String
@@ -43,6 +44,7 @@ model TpsTb {
   updatedAt      DateTime @updatedAt
 
   ruteTb RuteTb @relation(fields: [ruteId], references: [id], onDelete: Cascade)
+  userTb UserTb @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UserTb {
@@ -57,7 +59,8 @@ model UserTb {
   updatedAt DateTime @updatedAt
 
   ruteUserTb RuteUserTb[]
-  eventTb EventTb[]
+  tpsTb      TpsTb[]
+  eventTb    EventTb[]
 }
 
 model RuteUserTb {

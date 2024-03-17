@@ -6,10 +6,12 @@ import Swal from "sweetalert2"
 import { TpsTb } from "@prisma/client";
 import { useRouter } from "next/navigation"
 import { supabase, supabaseBUCKET } from '@/app/helper'
+import { setuid } from "process";
 
-function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Array<any> }) {
+function Update({ tps, reload, rute,pengawas }: { tps: TpsTb, reload: Function, rute: Array<any> , pengawas: Array<any>}) {
     const [nama, setNama] = useState(tps.nama)
     const [ruteId, setRuteId] = useState(String(tps.ruteId))
+    const [userId, setUserId] = useState(String(tps.userId))
     const [alamat, setAlamat] = useState(tps.alamat)
     const [jammulai, setJammulai] = useState("")
     const [jamselesai, setJamselesai] = useState("")
@@ -67,6 +69,7 @@ function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Arr
     const refreshform = () => {
         setNama(tps.nama)
         setRuteId(String(tps.ruteId))
+        setUserId(String(tps.userId))
         setAlamat(tps.alamat)
         splitData()
         setFoto(tps.foto)
@@ -82,6 +85,7 @@ function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Arr
             const formData = new FormData()
             formData.append('nama', nama)
             formData.append('ruteId', ruteId)
+            formData.append('userId', userId)
             formData.append('alamat', alamat)
             formData.append('jamOperasional', jamOperasional)
             formData.append('koordinat', koordinat)
@@ -142,6 +146,21 @@ function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Arr
                         <Modal.Title>Edit Data Rute</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                    <div className="mb-3 row">
+                            <label className="col-sm-3 col-form-label" >Pengawas</label>
+                            <div className="col-sm-9">
+                                <select
+                                    required
+                                    autoFocus
+                                    className="form-control"
+                                    value={userId} onChange={(e) => setUserId(e.target.value)}>
+                                    <option value={''}> Pilih Pengawas</option>
+                                    {pengawas?.map((item: any, i) => (
+                                        <option key={i} value={item.id} >{item.nama}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
                         <div className="mb-3 row">
                             <label className="col-sm-3 col-form-label" >Pilih Rute</label>
                             <div className="col-sm-9">

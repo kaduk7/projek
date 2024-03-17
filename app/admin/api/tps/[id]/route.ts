@@ -14,6 +14,7 @@ export const PATCH = async (request: Request, { params }: { params: { id: string
             nama: String(formData.get('nama')),
             alamat: String(formData.get('alamat')),
             ruteId: Number(formData.get('ruteId')),
+            userId: Number(formData.get('userId')),
             jamOperasional: String(formData.get('jamOperasional')),
             koordinat: String(formData.get('koordinat')),
         }

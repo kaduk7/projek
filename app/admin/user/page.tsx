@@ -52,6 +52,11 @@ const User = () => {
       sortable: true,
     },
     {
+      name: 'Jabatan',
+      selector: (row: any) => row.jenis,
+      sortable: true,
+    },
+    {
       name: 'Action',
       cell: (row: any) => (
         <div className="d-flex">
