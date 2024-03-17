@@ -8,12 +8,14 @@ import moment from 'moment';
 
 const Event = () => {
   const [dataevent, setDataevent] = useState([])
+  const [datamandor, setDataMandor] = useState([])
   const [filterText, setFilterText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
     reload()
+    mandor()
   }, [])
 
   const reload = async () => {
@@ -21,6 +23,16 @@ const Event = () => {
       const response = await fetch(`/admin/api/event`);
       const result = await response.json();
       setDataevent(result);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+
+  const mandor = async () => {
+    try {
+      const response = await fetch(`/admin/api/user`);
+      const result = await response.json();
+      setDataMandor(result[1]);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -60,7 +72,7 @@ const Event = () => {
       name: 'Action',
       cell: (row: any) => (
         <div className="d-flex">
-          <Update reload={reload} event={row} />
+          <Update reload={reload} event={row} mandor={datamandor} />
           <Delete reload={reload} eventfoto={row.foto} eventId={row.id} />
         </div>
       ),
@@ -80,7 +92,7 @@ const Event = () => {
             <div className="card-body">
               <div className="row mb-3">
                 <div className="col-md-9">
-                  <Add reload={reload} />
+                  <Add reload={reload} mandor={datamandor} />
                 </div>
                 <div className="col-md-3">
                   <div className="input-group mb-3  input-success">

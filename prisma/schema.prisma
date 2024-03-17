@@ -57,6 +57,7 @@ model UserTb {
   updatedAt DateTime @updatedAt
 
   ruteUserTb RuteUserTb[]
+  eventTb EventTb[]
 }
 
 model RuteUserTb {
@@ -80,6 +81,7 @@ model SlideTb {
 
 model EventTb {
   id             Int      @id @default(autoincrement())
+  userId         Int
   tanggalMulai   DateTime
   tanggalSelesai DateTime
   nama           String
@@ -89,6 +91,8 @@ model EventTb {
   alamatLokasi   String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+
+  userTb UserTb @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PengumumanTb {

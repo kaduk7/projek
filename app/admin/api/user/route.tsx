@@ -46,5 +46,13 @@ export const GET = async () => {
             nama: 'asc'
         }
     });
-    return NextResponse.json(user, { status: 200 })
+    const mandor = await prisma.userTb.findMany({
+        where:{
+                jenis: 'Mandor'  
+        },
+        orderBy: {
+            nama: 'asc'
+        }
+    });
+    return NextResponse.json([user,mandor], { status: 200 })
 }

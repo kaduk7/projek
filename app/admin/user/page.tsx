@@ -19,7 +19,7 @@ const User = () => {
     try {
       const response = await fetch(`/admin/api/user`);
       const result = await response.json();
-      setDatauser(result);
+      setDatauser(result[0]);
     } catch (error) {
       console.error('Error fetching data:', error);
     }

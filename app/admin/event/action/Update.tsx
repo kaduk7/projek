@@ -9,7 +9,8 @@ import { Editor } from '@tinymce/tinymce-react';
 import { supabase, supabaseBUCKET } from '@/app/helper'
 import moment from "moment";
 
-function Update({ event, reload }: { event: EventTb, reload: Function }) {
+function Update({ event, reload,mandor }: { event: EventTb, reload: Function,mandor:Array<any> }) {
+    const [userId, setUserId] = useState(String(event.userId))
     const [nama, setNama] = useState(event.nama)
     const [alamatLokasi, setAlamatLokasi] = useState(event.alamatLokasi)
     const [tanggalMulai, setTanggalmulai] = useState(moment(event.tanggalMulai).format("YYYY-MM-DD"))
@@ -63,6 +64,7 @@ function Update({ event, reload }: { event: EventTb, reload: Function }) {
 
     const refreshform = () => {
         setNama(event.nama)
+        setUserId(String(event.userId))
         setAlamatLokasi(event.alamatLokasi)
         setTanggalmulai(moment(event.tanggalMulai).format("YYYY-MM-DD"))
         setTanggalSelesai(moment(event.tanggalSelesai).format("YYYY-MM-DD"))
@@ -78,6 +80,7 @@ function Update({ event, reload }: { event: EventTb, reload: Function }) {
         const newfoto = foto === event.foto ? 'no' : 'yes'
         try {
             const formData = new FormData()
+            formData.append('userId', userId)
             formData.append('nama', nama)
             formData.append('alamatLokasi', alamatLokasi)
             formData.append('keterangan', keterangan)
@@ -142,10 +145,24 @@ function Update({ event, reload }: { event: EventTb, reload: Function }) {
                 keyboard={false}>
                 <form onSubmit={handleUpdate}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Edit Data Rute</Modal.Title>
+                        <Modal.Title>Edit Data Event</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                    <div className="mb-3 row">
+                        <div className="mb-3 row">
+                            <label className="col-sm-3 col-form-label" >Mandor</label>
+                            <div className="col-sm-9">
+                                <select
+                                    required
+                                    className="form-control"
+                                    value={userId} onChange={(e) => setUserId(e.target.value)}>
+                                    <option value={''}> Pilih Mandor</option>
+                                    {mandor?.map((item: any, i) => (
+                                        <option key={i} value={item.id} >{item.nama}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="mb-3 row">
                             <label className="col-sm-3 col-form-label" >Tanggal Mulai</label>
                             <div className="col-sm-3">
                                 <input

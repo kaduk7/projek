@@ -7,6 +7,7 @@ export const POST = async (request: Request) => {
     const formData = await request.formData()
     await prisma.eventTb.create({
         data: {
+            userId: Number(formData.get('userId')),
             tanggalMulai: String(formData.get('tanggalMulai')),
             tanggalSelesai: String(formData.get('tanggalSelesai')),
             nama: String(formData.get('nama')),

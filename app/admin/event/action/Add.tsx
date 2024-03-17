@@ -7,8 +7,9 @@ import { useRouter } from "next/navigation"
 import { supabase, supabaseBUCKET } from '@/app/helper'
 import { Editor } from '@tinymce/tinymce-react';
 
-function Add({ reload }: { reload: Function }) {
+function Add({ reload, mandor }: { reload: Function, mandor: Array<any> }) {
     const [nama, setNama] = useState("")
+    const [userId, setUserId] = useState("")
     const [alamatLokasi, setAlamatLokasi] = useState("")
     const [tanggalMulai, setTanggalmulai] = useState("")
     const [tanggalSelesai, setTanggalSelesai] = useState("")
@@ -45,6 +46,7 @@ function Add({ reload }: { reload: Function }) {
 
     function clearForm() {
         setNama('')
+        setUserId('')
         setAlamatLokasi('')
         setFile(null)
         setTanggalmulai('')
@@ -61,6 +63,7 @@ function Add({ reload }: { reload: Function }) {
         try {
             const formData = new FormData()
             formData.append('nama', nama)
+            formData.append('userId', userId)
             formData.append('alamatLokasi', alamatLokasi)
             formData.append('keterangan', keterangan)
             formData.append('tanggalMulai', new Date(tanggalMulai).toISOString())
@@ -120,6 +123,20 @@ function Add({ reload }: { reload: Function }) {
                         <Modal.Title>Tambah Data Event</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                        <div className="mb-3 row">
+                            <label className="col-sm-3 col-form-label" >Mandor</label>
+                            <div className="col-sm-9">
+                                <select
+                                    required
+                                    className="form-control"
+                                    value={userId} onChange={(e) => setUserId(e.target.value)}>
+                                    <option value={''}> Pilih Mandor</option>
+                                    {mandor?.map((item: any, i) => (
+                                        <option key={i} value={item.id} >{item.nama}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
                         <div className="mb-3 row">
                             <label className="col-sm-3 col-form-label" >Tanggal Mulai</label>
                             <div className="col-sm-3">
