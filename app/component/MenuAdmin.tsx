@@ -99,14 +99,11 @@ export default function MenuAdmin() {
                             <li>
                                 <Link href="/admin/slide">Slide</Link>
                             </li>
-                            <li>
+                            {/* <li>
                                 <Link href="/master/profil">Setting</Link>
-                            </li>
+                            </li> */}
                             <li>
                                 <Link href="/admin/pengumuman">Pengumuman</Link>
-                            </li>
-                            <li>
-                                <Link href="/master/berita">Berita</Link>
                             </li>
                         </ul>
                     </li>

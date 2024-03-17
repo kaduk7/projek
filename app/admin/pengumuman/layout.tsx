@@ -1,6 +1,6 @@
 
 export const metadata = {
-    title: "Data Event",
+    title: "Data Pengumuman",
 }
 
 function LayoutTps({ children }: { children: React.ReactNode }) {

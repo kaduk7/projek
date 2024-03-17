@@ -90,3 +90,11 @@ model EventTb {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
+model PengumumanTb {
+  id        Int      @id @default(autoincrement())
+  judul     String
+  isi       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
