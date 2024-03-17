@@ -198,7 +198,6 @@ function Add({ reload }: { reload: Function }) {
                             <div className="col-sm-9">
                                 <Editor
                                     value={keterangan}
-                                    initialValue=""
                                     init={{
                                         height: 500,
                                         menubar: true,

@@ -60,7 +60,7 @@ const Event = () => {
       name: 'Action',
       cell: (row: any) => (
         <div className="d-flex">
-          {/* <Update reload={reload} tps={row} /> */}
+          <Update reload={reload} event={row} />
           <Delete reload={reload} eventfoto={row.foto} eventId={row.id} />
         </div>
       ),

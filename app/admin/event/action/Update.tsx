@@ -3,19 +3,21 @@ import { useState, SyntheticEvent, useEffect } from "react"
 import axios from "axios"
 import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2"
-import { TpsTb } from "@prisma/client";
+import { EventTb } from "@prisma/client";
 import { useRouter } from "next/navigation"
+import { Editor } from '@tinymce/tinymce-react';
 import { supabase, supabaseBUCKET } from '@/app/helper'
+import moment from "moment";
 
-function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Array<any> }) {
-    const [nama, setNama] = useState(tps.nama)
-    const [ruteId, setRuteId] = useState(String(tps.ruteId))
-    const [alamat, setAlamat] = useState(tps.alamat)
-    const [jammulai, setJammulai] = useState("")
-    const [jamselesai, setJamselesai] = useState("")
+function Update({ event, reload }: { event: EventTb, reload: Function }) {
+    const [nama, setNama] = useState(event.nama)
+    const [alamatLokasi, setAlamatLokasi] = useState(event.alamatLokasi)
+    const [tanggalMulai, setTanggalmulai] = useState(moment(event.tanggalMulai).format("YYYY-MM-DD"))
+    const [tanggalSelesai, setTanggalSelesai] = useState(moment(event.tanggalSelesai).format("YYYY-MM-DD"))
+    const [keterangan, setKeterangan] = useState(event.keterangan)
     const [koordinat1, setKoordinat1] = useState("")
     const [koordinat2, setKoordinat2] = useState("")
-    const [foto, setFoto] = useState(tps.foto)
+    const [foto, setFoto] = useState(event.foto)
     const [file, setFile] = useState<File | null>()
     const [show, setShow] = useState(false);
     const router = useRouter()
@@ -45,15 +47,10 @@ function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Arr
     }, [file])
 
     const splitData = () => {
-        const koordinat = tps.koordinat.split(', ');
+        const koordinat = event.koordinat.split(', ');
         if (koordinat.length === 2) {
             setKoordinat1(koordinat[0]);
             setKoordinat2(koordinat[1]);
-        }
-        const jamOperasional = tps.jamOperasional.split(' - ');
-        if (jamOperasional.length === 2) {
-            setJammulai(jamOperasional[0]);
-            setJamselesai(jamOperasional[1]);
         }
     }
 
@@ -65,45 +62,47 @@ function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Arr
     const handleShow = () => setShow(true);
 
     const refreshform = () => {
-        setNama(tps.nama)
-        setRuteId(String(tps.ruteId))
-        setAlamat(tps.alamat)
+        setNama(event.nama)
+        setAlamatLokasi(event.alamatLokasi)
+        setTanggalmulai(moment(event.tanggalMulai).format("YYYY-MM-DD"))
+        setTanggalSelesai(moment(event.tanggalSelesai).format("YYYY-MM-DD"))
+        setKeterangan(event.keterangan)
         splitData()
-        setFoto(tps.foto)
+        setFoto(event.foto)
     }
 
     const handleUpdate = async (e: SyntheticEvent) => {
         setIsLoading(true)
         e.preventDefault()
-        const jamOperasional = `${jammulai} - ${jamselesai}`;
         const koordinat = `${koordinat1}, ${koordinat2}`;
-        const newfoto = foto === tps.foto ? 'no' : 'yes'
+        const newfoto = foto === event.foto ? 'no' : 'yes'
         try {
             const formData = new FormData()
             formData.append('nama', nama)
-            formData.append('ruteId', ruteId)
-            formData.append('alamat', alamat)
-            formData.append('jamOperasional', jamOperasional)
+            formData.append('alamatLokasi', alamatLokasi)
+            formData.append('keterangan', keterangan)
+            formData.append('tanggalMulai', new Date(tanggalMulai).toISOString())
+            formData.append('tanggalSelesai', new Date(tanggalSelesai).toISOString())
             formData.append('koordinat', koordinat)
             formData.append('file', file as File)
-            formData.append('newfoto', newfoto)
             const image = formData.get('file') as File;
             const namaunik = Date.now() + '-' + image.name
+            formData.append('namaunik', namaunik)
 
             if (newfoto === 'yes') {
                 await supabase.storage
                     .from(supabaseBUCKET)
-                    .remove([`foto-tps/${tps.foto}`]);
+                    .remove([`foto-event/${event.foto}`]);
 
                 await supabase.storage
                     .from(supabaseBUCKET)
-                    .upload(`foto-tps/${namaunik}`, image);
+                    .upload(`foto-event/${namaunik}`, image);
 
                 formData.append('namaunik', namaunik)
                 setFoto(namaunik)
             }
 
-            const xxx = await axios.patch(`/admin/api/tps/${tps.id}`, formData, {
+            const xxx = await axios.patch(`/admin/api/event/${event.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -128,6 +127,10 @@ function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Arr
         }
     }
 
+    const handleEditorChange = (content: any, editor: any) => {
+        setKeterangan(content);;
+    }
+
     return (
         <div>
             <span onClick={handleShow} className="btn btn-success shadow btn-xs sharp mx-1"><i className="fa fa-edit"></i></span>
@@ -142,19 +145,24 @@ function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Arr
                         <Modal.Title>Edit Data Rute</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <div className="mb-3 row">
-                            <label className="col-sm-3 col-form-label" >Pilih Rute</label>
-                            <div className="col-sm-9">
-                                <select
+                    <div className="mb-3 row">
+                            <label className="col-sm-3 col-form-label" >Tanggal Mulai</label>
+                            <div className="col-sm-3">
+                                <input
                                     required
-                                    autoFocus
+                                    type="date"
                                     className="form-control"
-                                    value={ruteId} onChange={(e) => setRuteId(e.target.value)}>
-                                    <option value={''}> Pilih Rute</option>
-                                    {rute?.map((item: any, i) => (
-                                        <option key={i} value={item.id} >{item.nama}</option>
-                                    ))}
-                                </select>
+                                    value={tanggalMulai} onChange={(e) => setTanggalmulai(e.target.value)}
+                                />
+                            </div>
+                            <label className="col-sm-3 col-form-label" > Tanggal Selesai</label>
+                            <div className="col-sm-3">
+                                <input
+                                    required
+                                    type="date"
+                                    className="form-control"
+                                    value={tanggalSelesai} onChange={(e) => setTanggalSelesai(e.target.value)}
+                                />
                             </div>
                         </div>
                         <div className="mb-3 row">
@@ -165,39 +173,6 @@ function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Arr
                                     type="text"
                                     className="form-control"
                                     value={nama} onChange={(e) => setNama(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <div className="mb-3 row">
-                            <label className="col-sm-3 col-form-label" >Alamat</label>
-                            <div className="col-sm-9">
-                                <input
-                                    required
-                                    type="text"
-                                    className="form-control"
-                                    value={alamat} onChange={(e) => setAlamat(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <div className="mb-3 row">
-                            <label className="col-sm-3 col-form-label" >Jam Operasional</label>
-                            <div className="col-sm-4">
-                                <input
-                                    required
-                                    type="time"
-                                    id="timeInput"
-                                    className="form-control"
-                                    value={jammulai} onChange={(e) => setJammulai(e.target.value)}
-                                />
-                            </div>
-                            <label className="col-sm-1 col-form-label" > s/d </label>
-                            <div className="col-sm-4">
-                                <input
-                                    required
-                                    type="time"
-                                    id="timeInput"
-                                    className="form-control"
-                                    value={jamselesai} onChange={(e) => setJamselesai(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -222,6 +197,17 @@ function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Arr
                             </div>
                         </div>
                         <div className="mb-3 row">
+                            <label className="col-sm-3 col-form-label" >Alamat Lokasi</label>
+                            <div className="col-sm-9">
+                                <input
+                                    required
+                                    type="text"
+                                    className="form-control"
+                                    value={alamatLokasi} onChange={(e) => setAlamatLokasi(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        <div className="mb-3 row">
                             <label className="col-sm-3 col-form-label" >Foto</label>
                             <div className="col-sm-9">
                                 <input
@@ -229,6 +215,30 @@ function Update({ tps, reload, rute }: { tps: TpsTb, reload: Function, rute: Arr
                                     className="form-control"
                                     accept="image/png, image/jpeg"
                                     onChange={(e) => setFile(e.target.files?.[0])}
+                                />
+                            </div>
+                        </div>
+                        <div className="mb-3 row">
+                            <label className="col-sm-3 col-form-label" >Keterangan</label>
+                            <div className="col-sm-9">
+                                <Editor
+                                    value={keterangan}
+                                    init={{
+                                        height: 500,
+                                        menubar: true,
+                                        plugins: [
+                                            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                                            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                                            'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
+                                        ],
+                                        toolbar:
+                                            'undo redo | blocks |formatselect | ' +
+                                            'bold italic forecolor | alignleft aligncenter ' +
+                                            'alignright alignjustify | bullist numlist outdent indent | ' +
+                                            'removeformat | help',
+                                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                                    }}
+                                    onEditorChange={handleEditorChange}
                                 />
                             </div>
                         </div>

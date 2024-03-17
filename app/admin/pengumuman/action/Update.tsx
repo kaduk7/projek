@@ -104,7 +104,6 @@ function Update({ pengumuman, reload }: { pengumuman: PengumumanTb, reload: Func
                             <div className="col-sm-9">
                                 <Editor
                                     value={isi}
-                                    initialValue=""
                                     init={{
                                         height: 500,
                                         menubar: true,

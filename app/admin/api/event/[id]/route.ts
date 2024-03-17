@@ -6,20 +6,21 @@ const prisma = new PrismaClient()
 export const PATCH = async (request: Request, { params }: { params: { id: string } }) => {
     const formData = await request.formData()
     const newfoto = formData.get('newfoto')
-    await prisma.tpsTb.update({
+    await prisma.eventTb.update({
         where: {
             id: Number(params.id)
         },
         data: {
+            tanggalMulai: String(formData.get('tanggalMulai')),
+            tanggalSelesai: String(formData.get('tanggalSelesai')),
             nama: String(formData.get('nama')),
-            alamat: String(formData.get('alamat')),
-            ruteId: Number(formData.get('ruteId')),
-            jamOperasional: String(formData.get('jamOperasional')),
+            keterangan: String(formData.get('keterangan')),
+            alamatLokasi: String(formData.get('alamatLokasi')),
             koordinat: String(formData.get('koordinat')),
         }
     })
     if (newfoto === 'yes') {
-        await prisma.tpsTb.update({
+        await prisma.eventTb.update({
             where: {
                 id: Number(params.id)
             },
