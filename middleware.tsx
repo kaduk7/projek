@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 const requireAuth: string[] = ["/"];
 const disableAuth: string[] = [
   "/api/auth",
+  "/api/mobile",
   "/login",
   "/template",
   "/tema",
