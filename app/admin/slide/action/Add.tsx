@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation"
 function Add({ reload }: { reload: Function }) {
     const [judul, setJudul] = useState("")
     const [file, setFile] = useState<File | null>()
+    const [preview, setPreview] = useState('')
     const [show, setShow] = useState(false);
     const router = useRouter()
     const ref = useRef<HTMLInputElement>(null);
@@ -34,6 +35,17 @@ function Add({ reload }: { reload: Function }) {
     useEffect(() => {
         ref.current?.focus();
     }, [])
+
+    useEffect(() => {
+        if (!file) {
+            setPreview('')
+            return
+        }
+        const objectUrl = URL.createObjectURL(file)
+        setPreview(objectUrl)
+
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [file])
 
     function clearForm() {
         setJudul('')
@@ -96,6 +108,23 @@ function Add({ reload }: { reload: Function }) {
                         <Modal.Title>Tambah Data Slide</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                    <div className="row">
+                            <div className="mb-3 col-md-12 d-flex justify-content-center">
+                                {file ?
+                                    <div className="">
+                                        <img
+                                            src={preview}
+                                            className=""
+                                            width='100%'
+                                            height={250}
+                                            alt=""
+                                        />
+                                    </div>
+                                    :
+                                    <img className="bg-gambarfoto" />
+                                }
+                            </div>
+                        </div>
                         <div className="mb-3 row">
                             <label className="col-sm-3 col-form-label" >Foto Slide</label>
                             <div className="col-sm-9">

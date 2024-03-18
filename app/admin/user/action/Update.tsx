@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2"
 import { UserTb } from "@prisma/client";
 import { useRouter } from "next/navigation"
-import { supabase, supabaseBUCKET } from '@/app/helper'
+import { supabase, supabaseBUCKET, supabaseUrl } from '@/app/helper'
 
 function Update({ user, reload }: { user: UserTb, reload: Function }) {
     const [nama, setNama] = useState(user.nama)
@@ -15,6 +15,7 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
     const [password, setPassword] = useState("")
     const [file, setFile] = useState<File | null>()
     const [foto, setFoto] = useState(user.foto)
+    const [preview, setPreview] = useState('')
     const [show, setShow] = useState(false);
     const [st, setSt] = useState(false);
     const router = useRouter()
@@ -32,10 +33,13 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
 
     useEffect(() => {
         if (!file) {
+            setPreview('')
+            setFoto(user.foto)
             return
         }
         const objectUrl = URL.createObjectURL(file)
         setFoto(objectUrl)
+        setPreview(objectUrl)
         return () => URL.revokeObjectURL(objectUrl)
     }, [file])
 
@@ -64,6 +68,7 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
         e.preventDefault()
         const newpass = password == "" ? 'no' : 'yes'
         const newfoto = foto === user.foto ? 'no' : 'yes'
+        console.log('newfoto',newfoto)
         try {
             const formData = new FormData()
             formData.append('nama', nama)
@@ -109,11 +114,11 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
                         await supabase.storage
                             .from(supabaseBUCKET)
                             .remove([`foto-user/${user.foto}`]);
-        
+
                         await supabase.storage
                             .from(supabaseBUCKET)
                             .upload(`foto-user/${namaunik}`, image);
-        
+
                         setFoto(namaunik)
                     }
                     setShow(false);
@@ -149,7 +154,33 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
                         <Modal.Title>Edit Data User</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                    <div className="row">
+                        <div className="row">
+                            <div className="mb-3 col-md-12 d-flex justify-content-center">
+                                {file ?
+                                    <div className="">
+                                        <img
+                                            src={preview}
+                                            className=""
+                                            width={250}
+                                            height={250}
+                                            alt=""
+                                        />
+                                    </div>
+                                    :
+                                    <div className="">
+                                        <img
+                                            src={`${supabaseUrl}/storage/v1/object/public/${supabaseBUCKET}/foto-user/${user.foto}`}
+                                            className=""
+                                            width={250}
+                                            height={250}
+                                            alt=""
+                                        />
+                                    </div>
+
+                                }
+                            </div>
+                        </div>
+                        <div className="row">
                             <div className="mb-3 col-md-6">
                                 <label className="form-label" >Nama</label>
                                 <input

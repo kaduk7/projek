@@ -17,6 +17,7 @@ function Add({ reload, mandor }: { reload: Function, mandor: Array<any> }) {
     const [koordinat1, setKoordinat1] = useState("")
     const [koordinat2, setKoordinat2] = useState("")
     const [file, setFile] = useState<File | null>()
+    const [preview, setPreview] = useState('')
     const [show, setShow] = useState(false);
     const router = useRouter()
     const ref = useRef<HTMLInputElement>(null);
@@ -43,6 +44,17 @@ function Add({ reload, mandor }: { reload: Function, mandor: Array<any> }) {
     useEffect(() => {
         ref.current?.focus();
     }, [])
+
+    useEffect(() => {
+        if (!file) {
+            setPreview('')
+            return
+        }
+        const objectUrl = URL.createObjectURL(file)
+        setPreview(objectUrl)
+
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [file])
 
     function clearForm() {
         setNama('')
@@ -201,13 +213,28 @@ function Add({ reload, mandor }: { reload: Function, mandor: Array<any> }) {
                         </div>
                         <div className="mb-3 row">
                             <label className="col-sm-3 col-form-label" >Foto</label>
-                            <div className="col-sm-9">
+                            <div className="col-sm-4">
                                 <input
                                     type="file"
                                     className="form-control"
                                     accept="image/png, image/jpeg"
                                     onChange={(e) => setFile(e.target.files?.[0])}
                                 />
+                            </div>
+                            <div className="col-sm-5">
+                                {file ?
+                                    <div className="">
+                                        <img
+                                            src={preview}
+                                            className=""
+                                            width='100%'
+                                            height={150}
+                                            alt=""
+                                        />
+                                    </div>
+                                    :
+                                    <img className="bg-gambarfoto2" />
+                                }
                             </div>
                         </div>
                         <div className="mb-3 row">

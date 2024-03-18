@@ -13,6 +13,7 @@ function Add({ reload }: { reload: Function }) {
     const [wa, setWa] = useState("")
     const [password, setPassword] = useState("")
     const [file, setFile] = useState<File | null>()
+    const [preview, setPreview] = useState('')
     const [show, setShow] = useState(false);
     const [st, setSt] = useState(false);
     const router = useRouter()
@@ -39,6 +40,17 @@ function Add({ reload }: { reload: Function }) {
     useEffect(() => {
         ref.current?.focus();
     }, [])
+
+    useEffect(() => {
+        if (!file) {
+            setPreview('')
+            return
+        }
+        const objectUrl = URL.createObjectURL(file)
+        setPreview(objectUrl)
+
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [file])
 
     function clearForm() {
         setNama('')
@@ -130,6 +142,23 @@ function Add({ reload }: { reload: Function }) {
                         <Modal.Title>Tambah Data User</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                        <div className="row">
+                            <div className="mb-3 col-md-12 d-flex justify-content-center">
+                                {file ?
+                                    <div className="">
+                                        <img
+                                            src={preview}
+                                            className="bg-fotouser"
+                                            width={250}
+                                            height={250}
+                                            alt=""
+                                        />
+                                    </div>
+                                    :
+                                    <img className="bg-fotouser" />
+                                }
+                            </div>
+                        </div>
                         <div className="row">
                             <div className="mb-3 col-md-6">
                                 <label className="form-label" >Nama</label>
