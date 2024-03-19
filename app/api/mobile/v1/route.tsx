@@ -17,6 +17,11 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json(result, { status: 200 });
   }
 
+  if (mapData.jenis_req === "load_slide") {
+    const result = await LoadSlide();
+    return NextResponse.json(result, { status: 200 });
+  }
+
   // =================================================================== End User
 
   return NextResponse.json(false, { status: 200 });
@@ -41,4 +46,9 @@ async function Login(data: any) {
   if (!isValid) return { err: true, msg: "Password salah" };
 
   return { err: false, msg: "Login berhasil", data: users[0] };
+}
+
+async function LoadSlide() {
+  const result = await prisma.slideTb.findMany();
+  return result;
 }
