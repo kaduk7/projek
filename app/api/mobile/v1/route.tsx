@@ -18,7 +18,7 @@ export const POST = async (request: NextRequest) => {
   }
 
   if (mapData.jenis_req === "load_slide") {
-    const result = await LoadSlide();
+    const result = await LoadSlide(mapData);
     return NextResponse.json(result, { status: 200 });
   }
 
@@ -48,7 +48,30 @@ async function Login(data: any) {
   return { err: false, msg: "Login berhasil", data: users[0] };
 }
 
-async function LoadSlide() {
-  const result = await prisma.slideTb.findMany();
+async function LoadSlide(data: any) {
+  const xAllId = await prisma.slideTb.findMany();
+
+  var allId = xAllId.map(function (item) {
+    return item.id;
+  });
+
+  const newData = await prisma.slideTb.findMany({
+    where: {
+      updatedAt: {
+        gt: new Date(data.last),
+      },
+    },
+  });
+
+  var newId = newData.map(function (item) {
+    return item.id;
+  });
+
+  const result = {
+    allId: allId.toString(),
+    newId: newId.toString(),
+    newData: newData,
+  };
+
   return result;
 }
