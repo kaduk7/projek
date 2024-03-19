@@ -22,6 +22,11 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json(result, { status: 200 });
   }
 
+  if (mapData.jenis_req === "load_event") {
+    const result = await LoadEvent(mapData);
+    return NextResponse.json(result, { status: 200 });
+  }
+
   // =================================================================== End User
 
   return NextResponse.json(false, { status: 200 });
@@ -56,6 +61,34 @@ async function LoadSlide(data: any) {
   });
 
   const newData = await prisma.slideTb.findMany({
+    where: {
+      updatedAt: {
+        gt: new Date(data.last),
+      },
+    },
+  });
+
+  var newId = newData.map(function (item) {
+    return item.id;
+  });
+
+  const result = {
+    allId: allId.toString(),
+    newId: newId.toString(),
+    newData: newData,
+  };
+
+  return result;
+}
+
+async function LoadEvent(data: any) {
+  const xAllId = await prisma.eventTb.findMany();
+
+  var allId = xAllId.map(function (item) {
+    return item.id;
+  });
+
+  const newData = await prisma.eventTb.findMany({
     where: {
       updatedAt: {
         gt: new Date(data.last),
