@@ -72,7 +72,7 @@ const Login = () => {
             <div className="login-form">
               <div className="text-center">
                 <img
-                  src="/tema/images/logohks.png"
+                  src="/tema/images/dlhk.png"
                   width="200"
                   height="200"
                   className="mt-5 mb-3"

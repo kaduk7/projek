@@ -7,8 +7,8 @@ export default function Header() {
         <div>
             <div className="nav-header">
                 <a href="/" className="brand-logo">
-                    <img alt="" width="55" height="55" className="logo-abbr" src="/tema/images/lgo.png" />
-                    <img alt="" width="220" height="51" className="brand-title" src="/tema/images/tulisan.png" />
+                    <img alt="" width="55" height="55" className="logo-abbr" src="/tema/images/dlhk.png" />
+                    <img alt="" width="220" height="51" className="brand-title" src="/tema/images/tulisan4.png" />
                 </a>
                 <div className="nav-control">
                     <div className="hamburger">
