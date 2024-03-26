@@ -53,22 +53,20 @@ function Add({ reload }: { reload: Function }) {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(function () {
-                if (xxx.data.pesan == 'berhasil') {
-                    handleClose();
-                    setIsLoading(false)
-                    clearForm();
-                    reload()
-                    router.refresh()
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil Simpan',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            }, 1500);
+            if (xxx.data.pesan == 'berhasil') {
+                handleClose();
+                setIsLoading(false)
+                clearForm();
+                reload()
+                router.refresh()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil Simpan',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -97,7 +95,7 @@ function Add({ reload }: { reload: Function }) {
                             <label className="col-sm-3 col-form-label" >Judul</label>
                             <div className="col-sm-9">
                                 <input
-                                autoFocus
+                                    autoFocus
                                     required
                                     type="text"
                                     className="form-control"

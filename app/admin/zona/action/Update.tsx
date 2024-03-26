@@ -3,7 +3,7 @@ import { useState, SyntheticEvent } from "react"
 import axios from "axios"
 import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2"
-import {  ZonaTb } from "@prisma/client";
+import { ZonaTb } from "@prisma/client";
 import { useRouter } from "next/navigation"
 
 function Update({ zona, reload }: { zona: ZonaTb, reload: Function }) {
@@ -44,21 +44,19 @@ function Update({ zona, reload }: { zona: ZonaTb, reload: Function }) {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(function () {
-                if (xxx.data.pesan == 'berhasil') {
-                    setShow(false);
-                    setIsLoading(false)
-                    reload()
-                    router.refresh()
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil diubah',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            }, 1500);
+            if (xxx.data.pesan == 'berhasil') {
+                setShow(false);
+                setIsLoading(false)
+                reload()
+                router.refresh()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil diubah',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
         } catch (error) {
             console.error('Error:', error);
         }

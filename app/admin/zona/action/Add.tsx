@@ -49,22 +49,20 @@ function Add({ reload }: { reload: Function }) {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(function () {
-                if (xxx.data.pesan == 'berhasil') {
-                    handleClose();
-                    setIsLoading(false)
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil Simpan',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    clearForm();
-                    reload()
-                    router.refresh()
-                }
-            }, 1500);
+            if (xxx.data.pesan == 'berhasil') {
+                handleClose();
+                setIsLoading(false)
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil Simpan',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                clearForm();
+                reload()
+                router.refresh()
+            }
         } catch (error) {
             console.error('Error:', error);
         }

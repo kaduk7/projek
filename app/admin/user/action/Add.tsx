@@ -82,46 +82,60 @@ function Add({ reload }: { reload: Function }) {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(async function () {
-                if (xxx.data.pesan == 'Nohp sudah ada') {
-                    setIsLoading(false)
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'warning',
-                        title: 'No Hp sudah terdaftar',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-                if (xxx.data.pesan == 'Nowa sudah ada') {
-                    setIsLoading(false)
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'warning',
-                        title: 'No WA sudah terdaftar',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-                if (xxx.data.pesan == 'berhasil') {
-                    await supabase.storage
-                        .from(supabaseBUCKET)
-                        .upload(`foto-user/${namaunik}`, image);
 
-                    handleClose();
-                    setIsLoading(false)
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil Simpan',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    clearForm();
-                    reload()
-                    router.refresh()
-                }
-            }, 1500);
+            if (xxx.data.pesan == 'Nohp sudah ada') {
+                setIsLoading(false)
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'No Hp sudah terdaftar',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            if (xxx.data.pesan == 'Nowa sudah ada') {
+                setIsLoading(false)
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'No WA sudah terdaftar',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+
+            const uploadResult = await supabase.storage
+                .from(supabaseBUCKET)
+                .upload(`foto-user/${namaunik}`, image)
+
+            if (uploadResult.error) {
+                setIsLoading(false)
+                reload()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'Gagal Upload Gambar',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                throw uploadResult.error
+            }
+
+            if (xxx.data.pesan == 'berhasil') {
+
+                handleClose();
+                setIsLoading(false)
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil Simpan',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                clearForm();
+                reload()
+                router.refresh()
+            }
         } catch (error) {
             console.error('Error:', error);
         }

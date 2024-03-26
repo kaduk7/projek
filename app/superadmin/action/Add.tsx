@@ -66,7 +66,6 @@ function Add({ reload }: { reload: Function }) {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(async function () {
                 if (xxx.data.pesan == 'Nohp sudah ada') {
                     setIsLoading(false)
                     Swal.fire({
@@ -105,7 +104,6 @@ function Add({ reload }: { reload: Function }) {
                     reload()
                     router.refresh()
                 }
-            }, 1500);
         } catch (error) {
             console.error('Error:', error);
         }

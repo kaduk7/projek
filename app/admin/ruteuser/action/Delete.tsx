@@ -24,18 +24,16 @@ function Delete({ reload, reloadId, ruteId, ruteuserId }: { reload: Function, re
         setIsLoading(true)
         handleClose()
         await axios.delete(`/admin/api/ruteuser/${ruteuserId}`)
-        setTimeout(function () {
-            reload()
-            reloadId(ruteId)
-            setIsLoading(false)
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Berhasil dihapus',
-                showConfirmButton: false,
-                timer: 1500
-            })
-        }, 1500);
+        reload()
+        reloadId(ruteId)
+        setIsLoading(false)
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500
+        })
     }
 
     return (

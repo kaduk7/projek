@@ -24,17 +24,15 @@ function Delete({ zonaId, reload }: { zonaId: Number, reload: Function }) {
         setIsLoading(true)
         handleClose()
         await axios.delete(`/admin/api/zona/${zonaId}`)
-        setTimeout(function () {
-            reload()
-            setIsLoading(false)
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Berhasil dihapus',
-                showConfirmButton: false,
-                timer: 1500
-            })
-        }, 1500);
+        reload()
+        setIsLoading(false)
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500
+        })
     }
 
     return (

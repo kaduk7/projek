@@ -81,52 +81,50 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(async function () {
-                if (xxx.data.pesan == 'sudah ada hp') {
-                    setIsLoading(false)
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'warning',
-                        title: 'No hp ini sudah terdaftar',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
+            if (xxx.data.pesan == 'sudah ada hp') {
+                setIsLoading(false)
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'No hp ini sudah terdaftar',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            if (xxx.data.pesan == 'sudah ada wa') {
+                setIsLoading(false)
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'No WA ini sudah terdaftar',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            if (xxx.data.pesan == 'berhasil') {
+                if (newfoto === 'yes') {
+                    await supabase.storage
+                        .from(supabaseBUCKET)
+                        .remove([`foto-user/${user.foto}`]);
+
+                    await supabase.storage
+                        .from(supabaseBUCKET)
+                        .upload(`foto-user/${namaunik}`, image);
+                    setFoto(namaunik)
                 }
-                if (xxx.data.pesan == 'sudah ada wa') {
-                    setIsLoading(false)
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'warning',
-                        title: 'No WA ini sudah terdaftar',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-                if (xxx.data.pesan == 'berhasil') {
-                    if (newfoto === 'yes') {
-                        await supabase.storage
-                            .from(supabaseBUCKET)
-                            .remove([`foto-user/${user.foto}`]);
-                        
-                        await supabase.storage
-                            .from(supabaseBUCKET)
-                            .upload(`foto-user/${namaunik}`, image);
-                        setFoto(namaunik)
-                    }
-                    setShow(false);
-                    setIsLoading(false)
-                    hapuspass()
-                    reload()
-                    router.refresh()
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil diubah',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            }, 1500);
+                setShow(false);
+                setIsLoading(false)
+                hapuspass()
+                reload()
+                router.refresh()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil diubah',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
         } catch (error) {
             console.error('Error:', error);
         }

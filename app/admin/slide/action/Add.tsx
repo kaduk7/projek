@@ -63,31 +63,43 @@ function Add({ reload }: { reload: Function }) {
             const namaunik = Date.now() + '-' + image.name
             formData.append('namaunik', namaunik)
 
+            const uploadResult = await supabase.storage
+                .from(supabaseBUCKET)
+                .upload(`foto-slide/${namaunik}`, image);
+
+            if (uploadResult.error) {
+                setIsLoading(false)
+                reload()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'Gagal Upload Gambar',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                throw uploadResult.error
+            }
+
             const xxx = await axios.post(`/admin/api/slide`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(async function () {
-                if (xxx.data.pesan == 'berhasil') {
-                    await supabase.storage
-                        .from(supabaseBUCKET)
-                        .upload(`foto-slide/${namaunik}`, image);
 
-                    handleClose();
-                    setIsLoading(false)
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil Simpan',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    clearForm();
-                    reload()
-                    router.refresh()
-                }
-            }, 1500);
+            if (xxx.data.pesan == 'berhasil') {
+                handleClose();
+                setIsLoading(false)
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil Simpan',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                clearForm();
+                reload()
+                router.refresh()
+            }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -108,7 +120,7 @@ function Add({ reload }: { reload: Function }) {
                         <Modal.Title>Tambah Data Slide</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                    <div className="row">
+                        <div className="row">
                             <div className="mb-3 col-md-12 d-flex justify-content-center">
                                 {file ?
                                     <div className="">

@@ -28,7 +28,6 @@ function Delete({ tpsId, tpsfoto, reload }: { tpsId: Number, tpsfoto: String, re
         await supabase.storage
             .from(supabaseBUCKET)
             .remove([`foto-tps/${tpsfoto}`]);
-        setTimeout(function () {
             reload()
             setIsLoading(false)
             Swal.fire({
@@ -38,7 +37,6 @@ function Delete({ tpsId, tpsfoto, reload }: { tpsId: Number, tpsfoto: String, re
                 showConfirmButton: false,
                 timer: 1500
             })
-        }, 1500);
     }
 
     return (

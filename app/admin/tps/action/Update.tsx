@@ -5,10 +5,10 @@ import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2"
 import { TpsTb } from "@prisma/client";
 import { useRouter } from "next/navigation"
-import { supabase, supabaseBUCKET } from '@/app/helper'
+import { supabase, supabaseBUCKET, supabaseUrl } from '@/app/helper'
 import { setuid } from "process";
 
-function Update({ tps, reload, rute,pengawas }: { tps: TpsTb, reload: Function, rute: Array<any> , pengawas: Array<any>}) {
+function Update({ tps, reload, rute, pengawas }: { tps: TpsTb, reload: Function, rute: Array<any>, pengawas: Array<any> }) {
     const [nama, setNama] = useState(tps.nama)
     const [ruteId, setRuteId] = useState(String(tps.ruteId))
     const [userId, setUserId] = useState(String(tps.userId))
@@ -19,6 +19,7 @@ function Update({ tps, reload, rute,pengawas }: { tps: TpsTb, reload: Function, 
     const [koordinat2, setKoordinat2] = useState("")
     const [foto, setFoto] = useState(tps.foto)
     const [file, setFile] = useState<File | null>()
+    const [preview, setPreview] = useState('')
     const [show, setShow] = useState(false);
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
@@ -39,10 +40,13 @@ function Update({ tps, reload, rute,pengawas }: { tps: TpsTb, reload: Function, 
 
     useEffect(() => {
         if (!file) {
+            setPreview('')
+            setFoto(tps.foto)
             return
         }
         const objectUrl = URL.createObjectURL(file)
         setFoto(objectUrl)
+        setPreview(objectUrl)
         return () => URL.revokeObjectURL(objectUrl)
     }, [file])
 
@@ -72,7 +76,7 @@ function Update({ tps, reload, rute,pengawas }: { tps: TpsTb, reload: Function, 
         setUserId(String(tps.userId))
         setAlamat(tps.alamat)
         splitData()
-        setFoto(tps.foto)
+        setFile(null)
     }
 
     const handleUpdate = async (e: SyntheticEvent) => {
@@ -81,6 +85,7 @@ function Update({ tps, reload, rute,pengawas }: { tps: TpsTb, reload: Function, 
         const jamOperasional = `${jammulai} - ${jamselesai}`;
         const koordinat = `${koordinat1}, ${koordinat2}`;
         const newfoto = foto === tps.foto ? 'no' : 'yes'
+        console.log('newfoto', newfoto)
         try {
             const formData = new FormData()
             formData.append('nama', nama)
@@ -93,17 +98,29 @@ function Update({ tps, reload, rute,pengawas }: { tps: TpsTb, reload: Function, 
             formData.append('newfoto', newfoto)
             const image = formData.get('file') as File;
             const namaunik = Date.now() + '-' + image.name
+            formData.append('namaunik', namaunik)
 
             if (newfoto === 'yes') {
                 await supabase.storage
                     .from(supabaseBUCKET)
                     .remove([`foto-tps/${tps.foto}`]);
 
-                await supabase.storage
+                const uploadResult = await supabase.storage
                     .from(supabaseBUCKET)
                     .upload(`foto-tps/${namaunik}`, image);
 
-                formData.append('namaunik', namaunik)
+                if (uploadResult.error) {
+                    setIsLoading(false)
+                    reload()
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'warning',
+                        title: 'Gagal Upload Gambar',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    throw uploadResult.error
+                }
                 setFoto(namaunik)
             }
 
@@ -112,21 +129,20 @@ function Update({ tps, reload, rute,pengawas }: { tps: TpsTb, reload: Function, 
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(function () {
-                if (xxx.data.pesan == 'berhasil') {
-                    setShow(false);
-                    setIsLoading(false)
-                    reload()
-                    router.refresh()
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil diubah',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            }, 1500);
+
+            if (xxx.data.pesan == 'berhasil') {
+                setShow(false);
+                setIsLoading(false)
+                reload()
+                router.refresh()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil diubah',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -146,7 +162,7 @@ function Update({ tps, reload, rute,pengawas }: { tps: TpsTb, reload: Function, 
                         <Modal.Title>Edit Data Rute</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                    <div className="mb-3 row">
+                        <div className="mb-3 row">
                             <label className="col-sm-3 col-form-label" >Pengawas</label>
                             <div className="col-sm-9">
                                 <select
@@ -249,6 +265,30 @@ function Update({ tps, reload, rute,pengawas }: { tps: TpsTb, reload: Function, 
                                     accept="image/png, image/jpeg"
                                     onChange={(e) => setFile(e.target.files?.[0])}
                                 />
+                            </div>
+                        </div>
+                        <div className="mb-3 row">
+                            <label className="col-sm-3 col-form-label" ></label>
+                            <div className="col-sm-5">
+                                {file ?
+                                    <div className="">
+                                        <img
+                                            src={preview}
+                                            width='100%'
+                                            height={150}
+                                            alt=""
+                                        />
+                                    </div>
+                                    :
+                                    <a href={`${supabaseUrl}/storage/v1/object/public/${supabaseBUCKET}/foto-tps/${tps.foto}`} target="_blank">
+                                        <img
+                                            src={`${supabaseUrl}/storage/v1/object/public/${supabaseBUCKET}/foto-tps/${tps.foto}`}
+                                            width='100%'
+                                            height={150}
+                                            alt=""
+                                        />
+                                    </a>
+                                }
                             </div>
                         </div>
                     </Modal.Body>

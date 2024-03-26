@@ -6,10 +6,10 @@ import Swal from "sweetalert2"
 import { EventTb } from "@prisma/client";
 import { useRouter } from "next/navigation"
 import { Editor } from '@tinymce/tinymce-react';
-import { supabase, supabaseBUCKET } from '@/app/helper'
+import { supabase, supabaseBUCKET, supabaseUrl } from '@/app/helper'
 import moment from "moment";
 
-function Update({ event, reload,mandor }: { event: EventTb, reload: Function,mandor:Array<any> }) {
+function Update({ event, reload, mandor }: { event: EventTb, reload: Function, mandor: Array<any> }) {
     const [userId, setUserId] = useState(String(event.userId))
     const [nama, setNama] = useState(event.nama)
     const [alamatLokasi, setAlamatLokasi] = useState(event.alamatLokasi)
@@ -20,6 +20,7 @@ function Update({ event, reload,mandor }: { event: EventTb, reload: Function,man
     const [koordinat2, setKoordinat2] = useState("")
     const [foto, setFoto] = useState(event.foto)
     const [file, setFile] = useState<File | null>()
+    const [preview, setPreview] = useState('')
     const [show, setShow] = useState(false);
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
@@ -40,10 +41,13 @@ function Update({ event, reload,mandor }: { event: EventTb, reload: Function,man
 
     useEffect(() => {
         if (!file) {
+            setPreview('')
+            setFoto(event.foto)
             return
         }
         const objectUrl = URL.createObjectURL(file)
         setFoto(objectUrl)
+        setPreview(objectUrl)
         return () => URL.revokeObjectURL(objectUrl)
     }, [file])
 
@@ -70,7 +74,7 @@ function Update({ event, reload,mandor }: { event: EventTb, reload: Function,man
         setTanggalSelesai(moment(event.tanggalSelesai).format("YYYY-MM-DD"))
         setKeterangan(event.keterangan)
         splitData()
-        setFoto(event.foto)
+        setFile(null)
     }
 
     const handleUpdate = async (e: SyntheticEvent) => {
@@ -78,6 +82,7 @@ function Update({ event, reload,mandor }: { event: EventTb, reload: Function,man
         e.preventDefault()
         const koordinat = `${koordinat1}, ${koordinat2}`;
         const newfoto = foto === event.foto ? 'no' : 'yes'
+
         try {
             const formData = new FormData()
             formData.append('userId', userId)
@@ -87,21 +92,34 @@ function Update({ event, reload,mandor }: { event: EventTb, reload: Function,man
             formData.append('tanggalMulai', new Date(tanggalMulai).toISOString())
             formData.append('tanggalSelesai', new Date(tanggalSelesai).toISOString())
             formData.append('koordinat', koordinat)
+            formData.append('newfoto', newfoto)
             formData.append('file', file as File)
             const image = formData.get('file') as File;
             const namaunik = Date.now() + '-' + image.name
             formData.append('namaunik', namaunik)
 
             if (newfoto === 'yes') {
-                await supabase.storage
+                const deleteResult = await supabase.storage
                     .from(supabaseBUCKET)
                     .remove([`foto-event/${event.foto}`]);
+                console.log('hapus', deleteResult)
 
-                await supabase.storage
+                const uploadResult = await supabase.storage
                     .from(supabaseBUCKET)
-                    .upload(`foto-event/${namaunik}`, image);
+                    .upload(`foto-event/${namaunik}`, image)
 
-                formData.append('namaunik', namaunik)
+                if (uploadResult.error) {
+                    setIsLoading(false)
+                    reload()
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'warning',
+                        title: 'Gagal Upload Gambar',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    throw uploadResult.error
+                }
                 setFoto(namaunik)
             }
 
@@ -110,21 +128,20 @@ function Update({ event, reload,mandor }: { event: EventTb, reload: Function,man
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(function () {
-                if (xxx.data.pesan == 'berhasil') {
-                    setShow(false);
-                    setIsLoading(false)
-                    reload()
-                    router.refresh()
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil diubah',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            }, 1500);
+
+            if (xxx.data.pesan == 'berhasil') {
+                setShow(false);
+                setIsLoading(false)
+                reload()
+                router.refresh()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil diubah',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -233,6 +250,30 @@ function Update({ event, reload,mandor }: { event: EventTb, reload: Function,man
                                     accept="image/png, image/jpeg"
                                     onChange={(e) => setFile(e.target.files?.[0])}
                                 />
+                            </div>
+                        </div>
+                        <div className="mb-3 row">
+                            <label className="col-sm-3 col-form-label" ></label>
+                            <div className="col-sm-5">
+                                {file ?
+                                    <div className="">
+                                        <img
+                                            src={preview}
+                                            width='100%'
+                                            height={150}
+                                            alt=""
+                                        />
+                                    </div>
+                                    :
+                                    <a href={`${supabaseUrl}/storage/v1/object/public/${supabaseBUCKET}/foto-event/${event.foto}`} target="_blank">
+                                        <img
+                                            src={`${supabaseUrl}/storage/v1/object/public/${supabaseBUCKET}/foto-event/${event.foto}`}
+                                            width='100%'
+                                            height={150}
+                                            alt=""
+                                        />
+                                    </a>
+                                }
                             </div>
                         </div>
                         <div className="mb-3 row">

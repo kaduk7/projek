@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation"
 import { supabase, supabaseBUCKET } from '@/app/helper'
 
-function Add({ reload, rute,pengawas }: { reload: Function, rute: Array<any>,pengawas:Array<any> }) {
+function Add({ reload, rute, pengawas }: { reload: Function, rute: Array<any>, pengawas: Array<any> }) {
     const [nama, setNama] = useState("")
     const [ruteId, setRuteId] = useState("")
     const [userId, setUserId] = useState("")
@@ -16,6 +16,7 @@ function Add({ reload, rute,pengawas }: { reload: Function, rute: Array<any>,pen
     const [koordinat1, setKoordinat1] = useState("")
     const [koordinat2, setKoordinat2] = useState("")
     const [file, setFile] = useState<File | null>()
+    const [preview, setPreview] = useState('')
     const [show, setShow] = useState(false);
     const router = useRouter()
     const ref = useRef<HTMLInputElement>(null);
@@ -42,6 +43,17 @@ function Add({ reload, rute,pengawas }: { reload: Function, rute: Array<any>,pen
     useEffect(() => {
         ref.current?.focus();
     }, [])
+
+    useEffect(() => {
+        if (!file) {
+            setPreview('')
+            return
+        }
+        const objectUrl = URL.createObjectURL(file)
+        setPreview(objectUrl)
+
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [file])
 
     function clearForm() {
         setNama('')
@@ -73,31 +85,43 @@ function Add({ reload, rute,pengawas }: { reload: Function, rute: Array<any>,pen
             const namaunik = Date.now() + '-' + image.name
             formData.append('namaunik', namaunik)
 
-            await supabase.storage
+            const uploadResult = await supabase.storage
                 .from(supabaseBUCKET)
                 .upload(`foto-tps/${namaunik}`, image);
+
+            if (uploadResult.error) {
+                setIsLoading(false)
+                reload()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'Gagal Upload Gambar',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                throw uploadResult.error
+            }
 
             const xxx = await axios.post(`/admin/api/tps`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(function () {
-                if (xxx.data.pesan == 'berhasil') {
-                    handleClose();
-                    setIsLoading(false)
-                    clearForm();
-                    reload()
-                    router.refresh()
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil Simpan',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            }, 1500);
+            
+            if (xxx.data.pesan == 'berhasil') {
+                handleClose();
+                setIsLoading(false)
+                clearForm();
+                reload()
+                router.refresh()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil Simpan',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -221,6 +245,24 @@ function Add({ reload, rute,pengawas }: { reload: Function, rute: Array<any>,pen
                                     accept="image/png, image/jpeg"
                                     onChange={(e) => setFile(e.target.files?.[0])}
                                 />
+                            </div>
+                        </div>
+                        <div className="mb-3 row">
+                            <label className="col-sm-3 col-form-label" ></label>
+                            <div className="col-sm-5">
+                                {file ?
+                                    <div className="">
+                                        <img
+                                            src={preview}
+                                            className=""
+                                            width='100%'
+                                            height={150}
+                                            alt=""
+                                        />
+                                    </div>
+                                    :
+                                    <img className="bg-gambarfoto2" />
+                                }
                             </div>
                         </div>
                     </Modal.Body>

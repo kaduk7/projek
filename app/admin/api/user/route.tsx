@@ -25,7 +25,7 @@ export const POST = async (request: Request) => {
     await prisma.userTb.create({
         data: {
             nama: String(formData.get('nama')),
-            jenis:String(formData.get('jenis')), 
+            jenis: String(formData.get('jenis')),
             hp: String(formData.get('hp')),
             wa: String(formData.get('wa')),
             foto: String(formData.get('namaunik')),
@@ -37,7 +37,7 @@ export const POST = async (request: Request) => {
 
 export const GET = async () => {
     const user = await prisma.userTb.findMany({
-        where:{
+        where: {
             NOT: {
                 jenis: 'Admin'
             }
@@ -47,20 +47,20 @@ export const GET = async () => {
         }
     });
     const mandor = await prisma.userTb.findMany({
-        where:{
-                jenis: 'Mandor'  
+        where: {
+            jenis: 'Mandor'
         },
         orderBy: {
             nama: 'asc'
         }
     });
     const pengawas = await prisma.userTb.findMany({
-        where:{
-                jenis: 'Pengawas'  
+        where: {
+            jenis: 'Pengawas'
         },
         orderBy: {
             nama: 'asc'
         }
     });
-    return NextResponse.json([user,mandor,pengawas], { status: 200 })
+    return NextResponse.json([user, mandor, pengawas], { status: 200 })
 }

@@ -86,31 +86,43 @@ function Add({ reload, mandor }: { reload: Function, mandor: Array<any> }) {
             const namaunik = Date.now() + '-' + image.name
             formData.append('namaunik', namaunik)
 
-            await supabase.storage
+            const uploadResult = await supabase.storage
                 .from(supabaseBUCKET)
-                .upload(`foto-event/${namaunik}`, image);
+                .upload(`foto-event/${namaunik}`, image)
+
+            if (uploadResult.error) {
+                setIsLoading(false)
+                reload()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'Gagal Upload Gambar',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                throw uploadResult.error
+            }
 
             const xxx = await axios.post(`/admin/api/event`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(function () {
-                if (xxx.data.pesan == 'berhasil') {
-                    handleClose();
-                    setIsLoading(false)
-                    clearForm();
-                    reload()
-                    router.refresh()
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil Simpan',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            }, 1500);
+
+            if (xxx.data.pesan == 'berhasil') {
+                handleClose();
+                setIsLoading(false)
+                clearForm();
+                reload()
+                router.refresh()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil Simpan',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -213,7 +225,7 @@ function Add({ reload, mandor }: { reload: Function, mandor: Array<any> }) {
                         </div>
                         <div className="mb-3 row">
                             <label className="col-sm-3 col-form-label" >Foto</label>
-                            <div className="col-sm-4">
+                            <div className="col-sm-9">
                                 <input
                                     type="file"
                                     className="form-control"
@@ -221,6 +233,9 @@ function Add({ reload, mandor }: { reload: Function, mandor: Array<any> }) {
                                     onChange={(e) => setFile(e.target.files?.[0])}
                                 />
                             </div>
+                        </div>
+                        <div className="mb-3 row">
+                            <label className="col-sm-3 col-form-label" ></label>
                             <div className="col-sm-5">
                                 {file ?
                                     <div className="">

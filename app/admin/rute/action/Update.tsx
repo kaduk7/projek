@@ -6,7 +6,7 @@ import Swal from "sweetalert2"
 import { RuteTb } from "@prisma/client";
 import { useRouter } from "next/navigation"
 
-function Update({ rute, reload,zona }: { rute: RuteTb, reload: Function, zona: Array<any> }) {
+function Update({ rute, reload, zona }: { rute: RuteTb, reload: Function, zona: Array<any> }) {
     const [nama, setNama] = useState(rute.nama)
     const [zonaId, setZonaId] = useState(String(rute.zonaId))
     const [show, setShow] = useState(false);
@@ -47,21 +47,19 @@ function Update({ rute, reload,zona }: { rute: RuteTb, reload: Function, zona: A
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(function () {
-                if (xxx.data.pesan == 'berhasil') {
-                    setShow(false);
-                    setIsLoading(false)
-                    reload()
-                    router.refresh()
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil diubah',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            }, 1500);
+            if (xxx.data.pesan == 'berhasil') {
+                setShow(false);
+                setIsLoading(false)
+                reload()
+                router.refresh()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil diubah',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -81,7 +79,7 @@ function Update({ rute, reload,zona }: { rute: RuteTb, reload: Function, zona: A
                         <Modal.Title>Edit Data Rute</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                    <div className="row">
+                        <div className="row">
                             <div className="mb-3 col-md-12">
                                 <label className="form-label" >Pilih Zona</label>
                                 <select

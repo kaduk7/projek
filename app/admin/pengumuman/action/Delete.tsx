@@ -4,7 +4,7 @@ import axios from "axios"
 import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2";
 
-function Delete({ pengumumanId, reload }: { pengumumanId: Number,  reload: Function }) {
+function Delete({ pengumumanId, reload }: { pengumumanId: Number, reload: Function }) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -24,17 +24,15 @@ function Delete({ pengumumanId, reload }: { pengumumanId: Number,  reload: Funct
         setIsLoading(true)
         handleClose()
         await axios.delete(`/admin/api/pengumuman/${pengumumanId}`)
-        setTimeout(function () {
-            reload()
-            setIsLoading(false)
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Berhasil dihapus',
-                showConfirmButton: false,
-                timer: 1500
-            })
-        }, 1500);
+        reload()
+        setIsLoading(false)
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500
+        })
     }
 
     return (

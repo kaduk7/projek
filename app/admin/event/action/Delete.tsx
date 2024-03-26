@@ -28,7 +28,6 @@ function Delete({ eventId, eventfoto, reload }: { eventId: Number, eventfoto: St
         await supabase.storage
             .from(supabaseBUCKET)
             .remove([`foto-event/${eventfoto}`]);
-        setTimeout(function () {
             reload()
             setIsLoading(false)
             Swal.fire({
@@ -38,7 +37,6 @@ function Delete({ eventId, eventfoto, reload }: { eventId: Number, eventfoto: St
                 showConfirmButton: false,
                 timer: 1500
             })
-        }, 1500);
     }
 
     return (

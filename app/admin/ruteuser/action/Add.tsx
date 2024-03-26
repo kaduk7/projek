@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation"
 import DataTable from 'react-data-table-component';
 
-function Add({ reload,reloadId, ruteId,dataAll }: { reload:Function,reloadId: Function, ruteId: String,dataAll:Array<any> }) {
+function Add({ reload, reloadId, ruteId, dataAll }: { reload: Function, reloadId: Function, ruteId: String, dataAll: Array<any> }) {
     const [datauser, setDatauser] = useState([])
     const ruteid = ruteId
     const [filterText, setFilterText] = useState('');
@@ -51,7 +51,7 @@ function Add({ reload,reloadId, ruteId,dataAll }: { reload:Function,reloadId: Fu
     }
 
     function clearForm() {
-        
+
     }
     const handleRowsPerPageChange = (newPerPage: number, page: number) => {
         setItemsPerPage(newPerPage);
@@ -82,7 +82,7 @@ function Add({ reload,reloadId, ruteId,dataAll }: { reload:Function,reloadId: Fu
         {
             name: 'Action',
             cell: (row: any) => (
-                !dataAll.some((data:any) => data.userId === Number(row.id) && data.ruteId === Number(ruteid)) ? (
+                !dataAll.some((data: any) => data.userId === Number(row.id) && data.ruteId === Number(ruteid)) ? (
                     <div className="d-flex">
                         <button type="button" className="btn btn-primary light" onClick={() => handleSubmit(row)}>Tambah</button>
                     </div>
@@ -104,22 +104,20 @@ function Add({ reload,reloadId, ruteId,dataAll }: { reload:Function,reloadId: Fu
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(function () {
-                if (xxx.data.pesan == 'berhasil') {
-                    setIsLoading(false)
-                    clearForm();
-                    reload()
-                    reloadId(ruteid)
-                    router.refresh()
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil Simpan',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            }, 1000);
+            if (xxx.data.pesan == 'berhasil') {
+                setIsLoading(false)
+                clearForm();
+                reload()
+                reloadId(ruteid)
+                router.refresh()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil Simpan',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
         } catch (error) {
             console.error('Error:', error);
         }

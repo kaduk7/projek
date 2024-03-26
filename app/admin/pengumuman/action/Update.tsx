@@ -53,21 +53,19 @@ function Update({ pengumuman, reload }: { pengumuman: PengumumanTb, reload: Func
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(function () {
-                if (xxx.data.pesan == 'berhasil') {
-                    setShow(false);
-                    setIsLoading(false)
-                    reload()
-                    router.refresh()
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil diubah',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            }, 1500);
+            if (xxx.data.pesan == 'berhasil') {
+                setShow(false);
+                setIsLoading(false)
+                reload()
+                router.refresh()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil diubah',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -87,7 +85,7 @@ function Update({ pengumuman, reload }: { pengumuman: PengumumanTb, reload: Func
                         <Modal.Title>Edit Data Pengumuman</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                    <div className="mb-3 row">
+                        <div className="mb-3 row">
                             <label className="col-sm-3 col-form-label" >Judul</label>
                             <div className="col-sm-9">
                                 <input

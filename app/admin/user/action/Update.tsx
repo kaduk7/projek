@@ -60,7 +60,7 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
         setHp(user.hp)
         setWa(user.wa)
         setPassword("")
-        setFoto(user.foto)
+        setFile(null)
     }
 
     const handleUpdate = async (e: SyntheticEvent) => {
@@ -68,7 +68,6 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
         e.preventDefault()
         const newpass = password == "" ? 'no' : 'yes'
         const newfoto = foto === user.foto ? 'no' : 'yes'
-        console.log('newfoto',newfoto)
         try {
             const formData = new FormData()
             formData.append('nama', nama)
@@ -88,53 +87,63 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-            setTimeout(async function () {
-                if (xxx.data.pesan == 'sudah ada hp') {
-                    setIsLoading(false)
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'warning',
-                        title: 'No hp ini sudah terdaftar',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-                if (xxx.data.pesan == 'sudah ada wa') {
-                    setIsLoading(false)
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'warning',
-                        title: 'No WA ini sudah terdaftar',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-                if (xxx.data.pesan == 'berhasil') {
-                    if (newfoto === 'yes') {
-                        await supabase.storage
-                            .from(supabaseBUCKET)
-                            .remove([`foto-user/${user.foto}`]);
+            if (xxx.data.pesan == 'sudah ada hp') {
+                setIsLoading(false)
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'No hp ini sudah terdaftar',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            if (xxx.data.pesan == 'sudah ada wa') {
+                setIsLoading(false)
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'No WA ini sudah terdaftar',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+            if (xxx.data.pesan == 'berhasil') {
+                if (newfoto === 'yes') {
+                    await supabase.storage
+                        .from(supabaseBUCKET)
+                        .remove([`foto-user/${user.foto}`]);
 
-                        await supabase.storage
-                            .from(supabaseBUCKET)
-                            .upload(`foto-user/${namaunik}`, image);
+                    const uploadResult = await supabase.storage
+                        .from(supabaseBUCKET)
+                        .upload(`foto-user/${namaunik}`, image)
 
-                        setFoto(namaunik)
+                    if (uploadResult.error) {
+                        setIsLoading(false)
+                        reload()
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'warning',
+                            title: 'Gagal Upload Gambar',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        throw uploadResult.error
                     }
-                    setShow(false);
-                    setIsLoading(false)
-                    hapuspass()
-                    reload()
-                    router.refresh()
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Berhasil diubah',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
+                    setFoto(namaunik)
                 }
-            }, 1500);
+                setShow(false);
+                setIsLoading(false)
+                hapuspass()
+                reload()
+                router.refresh()
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil diubah',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
         } catch (error) {
             console.error('Error:', error);
         }

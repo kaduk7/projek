@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Swal from "sweetalert2";
 import { supabase, supabaseBUCKET } from '@/app/helper'
 
-function Delete({ userId, reload,userFoto }: { userId: Number, reload: Function,userFoto:String }) {
+function Delete({ userId, reload, userFoto }: { userId: Number, reload: Function, userFoto: String }) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -28,17 +28,15 @@ function Delete({ userId, reload,userFoto }: { userId: Number, reload: Function,
         await supabase.storage
             .from(supabaseBUCKET)
             .remove([`foto-user/${userFoto}`]);
-        setTimeout(function () {
-            reload()
-            setIsLoading(false)
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Berhasil dihapus',
-                showConfirmButton: false,
-                timer: 1500
-            })
-        }, 1500);
+        reload()
+        setIsLoading(false)
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Berhasil dihapus',
+            showConfirmButton: false,
+            timer: 1500
+        })
     }
 
     return (
