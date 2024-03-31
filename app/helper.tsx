@@ -1,5 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
+import moment from 'moment';
+import 'moment/locale/id';
+moment.locale('id');
 
 const currentTime = new Date();
 
@@ -39,6 +42,30 @@ export function kalkulasiWaktu(newsTime: any) {
     return `${tahun} tahun yang lalu`;
   }
 }
+
+export function tanggalIndo(tanggal: any) {
+  const tanggalFormatIndonesia = moment(tanggal).format('DD MMMM YYYY');
+  return tanggalFormatIndonesia
+}
+
+export function tanggalHariIni ()  {
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+  const yyyy = today.getFullYear();
+
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+export function mingguDepan ()  {
+  const today = new Date();
+  today.setDate(today.getDate() + 7);
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+  const yyyy = today.getFullYear();
+
+  return `${yyyy}-${mm}-${dd}`;
+};
 
 export const StyleSelect = {
   control: (provided: any, state: any) => ({

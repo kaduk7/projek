@@ -169,7 +169,7 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
                                     <div className="">
                                         <img
                                             src={preview}
-                                            className=""
+                                            className="rounded"
                                             width={250}
                                             height={250}
                                             alt=""
@@ -179,7 +179,7 @@ function Update({ user, reload }: { user: UserTb, reload: Function }) {
                                     <div className="">
                                         <img
                                             src={`${supabaseUrl}/storage/v1/object/public/${supabaseBUCKET}/foto-user/${user.foto}`}
-                                            className=""
+                                            className="rounded"
                                             width={250}
                                             height={250}
                                             alt=""

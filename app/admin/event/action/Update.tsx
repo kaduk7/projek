@@ -258,6 +258,7 @@ function Update({ event, reload, mandor }: { event: EventTb, reload: Function, m
                                 {file ?
                                     <div className="">
                                         <img
+                                            className="rounded"
                                             src={preview}
                                             width='100%'
                                             height={150}
@@ -267,6 +268,7 @@ function Update({ event, reload, mandor }: { event: EventTb, reload: Function, m
                                     :
                                     <a href={`${supabaseUrl}/storage/v1/object/public/${supabaseBUCKET}/foto-event/${event.foto}`} target="_blank">
                                         <img
+                                            className="rounded"
                                             src={`${supabaseUrl}/storage/v1/object/public/${supabaseBUCKET}/foto-event/${event.foto}`}
                                             width='100%'
                                             height={150}

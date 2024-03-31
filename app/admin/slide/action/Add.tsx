@@ -126,7 +126,7 @@ function Add({ reload }: { reload: Function }) {
                                     <div className="">
                                         <img
                                             src={preview}
-                                            className=""
+                                            className="rounded"
                                             width='100%'
                                             height={250}
                                             alt=""

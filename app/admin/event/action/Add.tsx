@@ -6,13 +6,14 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation"
 import { supabase, supabaseBUCKET } from '@/app/helper'
 import { Editor } from '@tinymce/tinymce-react';
+import { tanggalHariIni,mingguDepan } from "@/app/helper";
 
 function Add({ reload, mandor }: { reload: Function, mandor: Array<any> }) {
     const [nama, setNama] = useState("")
     const [userId, setUserId] = useState("")
     const [alamatLokasi, setAlamatLokasi] = useState("")
-    const [tanggalMulai, setTanggalmulai] = useState("")
-    const [tanggalSelesai, setTanggalSelesai] = useState("")
+    const [tanggalMulai, setTanggalmulai] = useState(tanggalHariIni)
+    const [tanggalSelesai, setTanggalSelesai] = useState(mingguDepan)
     const [keterangan, setKeterangan] = useState("")
     const [koordinat1, setKoordinat1] = useState("")
     const [koordinat2, setKoordinat2] = useState("")
@@ -241,7 +242,7 @@ function Add({ reload, mandor }: { reload: Function, mandor: Array<any> }) {
                                     <div className="">
                                         <img
                                             src={preview}
-                                            className=""
+                                            className="rounded"
                                             width='100%'
                                             height={150}
                                             alt=""

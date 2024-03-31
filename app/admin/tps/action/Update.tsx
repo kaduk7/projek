@@ -273,6 +273,7 @@ function Update({ tps, reload, rute, pengawas }: { tps: TpsTb, reload: Function,
                                 {file ?
                                     <div className="">
                                         <img
+                                            className="rounded"
                                             src={preview}
                                             width='100%'
                                             height={150}
@@ -282,6 +283,7 @@ function Update({ tps, reload, rute, pengawas }: { tps: TpsTb, reload: Function,
                                     :
                                     <a href={`${supabaseUrl}/storage/v1/object/public/${supabaseBUCKET}/foto-tps/${tps.foto}`} target="_blank">
                                         <img
+                                            className="rounded"
                                             src={`${supabaseUrl}/storage/v1/object/public/${supabaseBUCKET}/foto-tps/${tps.foto}`}
                                             width='100%'
                                             height={150}

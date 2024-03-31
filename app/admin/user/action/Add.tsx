@@ -162,7 +162,7 @@ function Add({ reload }: { reload: Function }) {
                                     <div className="">
                                         <img
                                             src={preview}
-                                            className="bg-fotouser"
+                                            className="rounded"
                                             width={250}
                                             height={250}
                                             alt=""

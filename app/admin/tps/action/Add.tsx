@@ -254,7 +254,7 @@ function Add({ reload, rute, pengawas }: { reload: Function, rute: Array<any>, p
                                     <div className="">
                                         <img
                                             src={preview}
-                                            className=""
+                                            className="rounded"
                                             width='100%'
                                             height={150}
                                             alt=""
